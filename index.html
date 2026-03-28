@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>LifeCare Clinic</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f5f0e8; color: #1a2420; max-width: 480px; margin: 0 auto; }
+
+/* HEADER */
+.header { background: #1e3a2f; padding: 18px 16px 14px; text-align: center; }
+.header h1 { color: #c9a84c; font-size: 24px; letter-spacing: 1px; }
+.header p { color: #cad2c5; font-size: 11px; margin-top: 4px; letter-spacing: 2px; }
+.header small { color: #c9a84c; font-size: 10px; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 2px 10px; display: inline-block; margin-top: 6px; }
+
+/* API KEY BAR */
+.apibar { background: #f2ead8; border-bottom: 1px solid #b5c4b1; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+.apibar label { font-size: 11px; font-weight: bold; color: #52796f; white-space: nowrap; }
+.apibar input { flex: 1; border: 1px solid #b5c4b1; border-radius: 6px; padding: 6px 8px; font-size: 12px; background: #fff; }
+.apibar span { font-size: 11px; white-space: nowrap; color: #52796f; }
+
+/* TABS */
+.tabs { display: flex; background: #1e3a2f; border-bottom: 2px solid #c9a84c; position: sticky; top: 0; z-index: 999; }
+.tabs a { flex: 1; text-align: center; padding: 10px 2px 8px; color: #cad2c5; font-size: 9px; font-weight: bold; text-transform: uppercase; text-decoration: none; letter-spacing: 0.5px; border-bottom: 3px solid transparent; display: block; cursor: pointer; }
+.tabs a.active { color: #c9a84c; border-bottom-color: #c9a84c; }
+
+/* PANELS */
+.panel { display: none; padding: 12px; }
+.panel.active { display: block; }
+
+/* ORGANON QUOTE */
+.quote { background: linear-gradient(135deg, #1e3a2f, #2d6a4f); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; border-left: 3px solid #c9a84c; }
+.quote .qt { font-size: 10px; color: #c9a84c; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.quote p { font-size: 12px; color: rgba(255,255,255,0.85); font-style: italic; line-height: 1.5; }
+.quote small { font-size: 10px; color: #c9a84c; display: block; margin-top: 4px; }
+
+/* CARD */
+.card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; border: 1px solid #b5c4b1; box-shadow: 0 2px 12px rgba(30,58,47,0.08); }
+.card h3 { font-size: 16px; color: #1e3a2f; border-bottom: 1px solid #b5c4b1; padding-bottom: 8px; margin-bottom: 12px; }
+
+/* FORM */
+label { font-size: 11px; font-weight: bold; color: #52796f; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+textarea, input[type=text], select { width: 100%; border: 1.5px solid #b5c4b1; border-radius: 8px; padding: 10px 12px; font-size: 13px; background: #f8f4ed; outline: none; font-family: Arial, sans-serif; margin-bottom: 12px; }
+textarea { resize: none; min-height: 75px; }
+textarea:focus, input[type=text]:focus, select:focus { border-color: #52796f; background: #fff; }
+.hint { font-size: 10px; color: #c9a84c; font-style: italic; margin-top: -8px; margin-bottom: 10px; }
+
+/* MIASM */
+.miasm { display: flex; gap: 6px; margin-bottom: 12px; }
+.miasm button { flex: 1; padding: 7px 4px; font-size: 11px; font-weight: bold; border-radius: 7px; cursor: pointer; border: 1.5px solid; background: #fff; }
+.miasm button.psora { border-color: #7aad8a; color: #2e6b42; }
+.miasm button.psora.on { background: #2e6b42; color: #fff; }
+.miasm button.sycosis { border-color: #7a9aad; color: #1e4f6b; }
+.miasm button.sycosis.on { background: #1e4f6b; color: #fff; }
+.miasm button.syphilis { border-color: #ad7a7a; color: #6b1e1e; }
+.miasm button.syphilis.on { background: #6b1e1e; color: #fff; }
+.miasm button.tubercular { border-color: #ad9f7a; color: #5c4a1e; font-size: 9px; }
+.miasm button.tubercular.on { background: #5c4a1e; color: #fff; }
+
+/* TAGS */
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+.tags button { background: #f2ead8; color: #1e3a2f; border: 1px solid #b5c4b1; border-radius: 20px; padding: 4px 10px; font-size: 11px; cursor: pointer; }
+.tags button:hover, .tags button:active { background: #1e3a2f; color: #c9a84c; }
+
+/* BUTTONS */
+.btn { width: 100%; padding: 13px; background: #1e3a2f; color: #fff; border: none; border-radius: 9px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
+.btn:hover, .btn:active { background: #2d6a4f; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-wa { background: #25d366; }
+.btn-wa:hover { background: #128c7e; }
+.btn-call { background: #f2ead8; color: #1e3a2f; border: 1px solid #b5c4b1; }
+
+/* RESPONSE */
+.result { background: #f2ead8; border: 1px solid #b5c4b1; border-left: 3px solid #c9a84c; border-radius: 10px; padding: 14px; margin-top: 10px; font-size: 13px; line-height: 1.8; white-space: pre-wrap; display: none; }
+.result.show { display: block; }
+
+/* LOADING */
+.loading { display: none; text-align: center; padding: 10px; font-size: 12px; color: #52796f; font-style: italic; }
+.loading.show { display: block; }
+
+/* CHAT */
+.chat-box { min-height: 250px; max-height: 350px; overflow-y: auto; border: 1px solid #b5c4b1; border-radius: 10px; padding: 10px; background: #fafaf8; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+.msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+.msg.bot { background: #f2ead8; border-left: 2px solid #c9a84c; align-self: flex-start; }
+.msg.user { background: #1e3a2f; color: #fff; align-self: flex-end; }
+.chat-row { display: flex; gap: 8px; }
+.chat-row input { flex: 1; margin-bottom: 0; }
+.chat-send { width: 42px; height: 42px; background: #1e3a2f; color: #c9a84c; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; flex-shrink: 0; }
+
+/* DOCTOR CARD */
+.doc-card { background: linear-gradient(135deg, #1e3a2f, #2d6a4f); border-radius: 14px; padding: 22px 16px; text-align: center; margin-bottom: 12px; }
+.doc-avatar { width: 72px; height: 72px; background: rgba(201,168,76,0.2); border: 2px solid #c9a84c; border-radius: 50%; margin: 0 auto 12px; font-size: 32px; display: flex; align-items: center; justify-content: center; }
+.doc-name { font-size: 22px; color: #c9a84c; font-weight: bold; }
+.doc-title { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.doc-since { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 6px; font-style: italic; }
+
+/* INFO ROW */
+.info-row { display: flex; gap: 10px; align-items: flex-start; background: #f8f4ed; border-radius: 10px; padding: 12px; margin-bottom: 8px; border: 1px solid #b5c4b1; }
+.info-icon { font-size: 20px; flex-shrink: 0; }
+.info-label { font-size: 10px; font-weight: bold; color: #52796f; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.info-val { font-size: 14px; color: #1a2420; line-height: 1.5; }
+.timing-pill { display: inline-block; background: #d8f3dc; color: #1e3a2f; border-radius: 5px; padding: 1px 7px; font-size: 11px; font-weight: bold; margin-right: 4px; }
+
+/* OTP OVERLAY */
+#otp-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #f5f0e8;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+#otp-overlay.hidden { display: none; }
+.otp-logo { background: #1e3a2f; border-radius: 16px; padding: 18px 24px; text-align: center; margin-bottom: 24px; width: 100%; max-width: 360px; }
+.otp-logo h1 { color: #c9a84c; font-size: 22px; letter-spacing: 1px; }
+.otp-logo p { color: #cad2c5; font-size: 10px; margin-top: 4px; letter-spacing: 2px; }
+.otp-card { background: #fff; border-radius: 16px; padding: 22px; border: 1px solid #b5c4b1; box-shadow: 0 4px 20px rgba(30,58,47,0.10); width: 100%; max-width: 360px; }
+.otp-card h2 { font-size: 17px; color: #1e3a2f; margin-bottom: 6px; }
+.otp-card p { font-size: 12px; color: #52796f; margin-bottom: 18px; line-height: 1.5; }
+.otp-input { width: 100%; border: 1.5px solid #b5c4b1; border-radius: 8px; padding: 11px 12px; font-size: 14px; background: #f8f4ed; outline: none; margin-bottom: 12px; font-family: Arial, sans-serif; box-sizing: border-box; }
+.otp-input:focus { border-color: #52796f; background: #fff; }
+.otp-digits { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+.otp-digits input { width: 42px; height: 50px; text-align: center; font-size: 22px; font-weight: bold; border: 2px solid #b5c4b1; border-radius: 10px; background: #f8f4ed; outline: none; color: #1e3a2f; }
+.otp-digits input:focus { border-color: #1e3a2f; background: #fff; }
+.otp-btn { width: 100%; padding: 13px; background: #1e3a2f; color: #fff; border: none; border-radius: 9px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+.otp-btn:hover { background: #2d6a4f; }
+.otp-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.otp-msg { font-size: 12px; text-align: center; min-height: 18px; margin-bottom: 6px; }
+.otp-msg.err { color: #b93232; }
+.otp-msg.ok { color: #2e6b42; }
+.otp-resend { font-size: 11px; color: #52796f; text-align: center; cursor: pointer; text-decoration: underline; }
+.otp-resend:hover { color: #1e3a2f; }
+#otp-step2 { display: none; }
+.otp-email-display { font-size: 12px; color: #1e3a2f; font-weight: bold; background: #f2ead8; border-radius: 6px; padding: 6px 10px; margin-bottom: 14px; text-align: center; word-break: break-all; }
+.otp-timer { font-size: 11px; color: #c9a84c; text-align: center; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- EMAIL OTP OVERLAY -->
+<div id="otp-overlay">
+  <div class="otp-logo">
+    <h1>LifeCare Clinic</h1>
+    <p>HOMEOPATHY · ORGANON 6TH EDITION · EST. 2022</p>
+  </div>
+  <div class="otp-card">
+
+    <!-- STEP 1: Enter Email -->
+    <div id="otp-step1">
+      <h2>🔒 Secure Access</h2>
+      <p>Enter your registered email address. A 6-digit OTP will be sent to verify your identity.</p>
+      <input class="otp-input" type="email" id="otp-email" placeholder="doctor@example.com" autocomplete="email">
+      <div class="otp-msg" id="otp-msg1"></div>
+      <button class="otp-btn" id="otp-send-btn" onclick="otpSendCode()">Send OTP →</button>
+    </div>
+
+    <!-- STEP 2: Enter OTP -->
+    <div id="otp-step2">
+      <h2>✉️ Enter OTP</h2>
+      <p>A 6-digit code has been sent to:</p>
+      <div class="otp-email-display" id="otp-email-display"></div>
+      <p style="margin-bottom:10px;">Enter the code below. It expires in <strong>5 minutes</strong>.</p>
+      <div class="otp-digits" id="otp-boxes">
+        <input type="text" maxlength="1" inputmode="numeric" oninput="otpDigit(this,0)" onkeydown="otpBack(event,0)">
+        <input type="text" maxlength="1" inputmode="numeric" oninput="otpDigit(this,1)" onkeydown="otpBack(event,1)">
+        <input type="text" maxlength="1" inputmode="numeric" oninput="otpDigit(this,2)" onkeydown="otpBack(event,2)">
+        <input type="text" maxlength="1" inputmode="numeric" oninput="otpDigit(this,3)" onkeydown="otpBack(event,3)">
+        <input type="text" maxlength="1" inputmode="numeric" oninput="otpDigit(this,4)" onkeydown="otpBack(event,4)">
+        <input type="text" maxlength="1" inputmode="numeric" oninput="otpDigit(this,5)" onkeydown="otpBack(event,5)">
+      </div>
+      <div class="otp-timer" id="otp-timer"></div>
+      <div class="otp-msg" id="otp-msg2"></div>
+      <button class="otp-btn" id="otp-verify-btn" onclick="otpVerify()">Verify & Enter →</button>
+      <div class="otp-resend" id="otp-resend" onclick="otpResend()" style="display:none;">↩ Resend OTP</div>
+      <div style="margin-top:10px;text-align:center;">
+        <span style="font-size:11px;color:#52796f;cursor:pointer;text-decoration:underline;" onclick="otpBack2Step1()">← Change email</span>
+      </div>
+    </div>
+
+  </div>
+  <!-- EmailJS config notice -->
+  <p style="font-size:10px;color:#999;margin-top:16px;text-align:center;max-width:320px;">
+    Secured with Email OTP · Powered by EmailJS
+  </p>
+</div>
+
+<div class="header">
+  <h1>LifeCare Clinic</h1>
+  <p>HOMEOPATHY · ORGANON 6TH EDITION · EST. 2022</p>
+  <small>Organon 6th Ed. · Boericke · Kent · Clarke · Allen</small>
+</div>
+
+
+
+<div class="tabs" id="tabs">
+  <a class="active" onclick="go('remedy',this)">🌿<br>REMEDY</a>
+  <a onclick="go('repertory',this)">📋<br>REPRTORY</a>
+  <a onclick="go('case',this)">🩺<br>CASE</a>
+  <a onclick="go('materia',this)">📖<br>MATERIA</a>
+  <a onclick="go('clinic',this)">🏥<br>CLINIC</a>
+</div>
+
+<!-- REMEDY -->
+<div id="remedy" class="panel active">
+  <div class="quote">
+    <div class="qt">Organon Principle</div>
+    <p>"The physician's highest calling is to make sick people healthy — to heal, as it is termed."</p>
+    <small>§1 — Organon of Medicine, 6th Edition</small>
+  </div>
+  <div class="card">
+    <h3>🌿 Symptom–Remedy Finder &nbsp;<small style="font-size:10px;background:#f0e0a0;color:#7a5c10;padding:2px 7px;border-radius:6px;">§6 Totality</small></h3>
+    <label>Chief Complaint</label>
+    <textarea id="s-complaint" placeholder="Describe the main suffering of the patient..."></textarea>
+    <div class="hint">§83 — Individualising examination of each case</div>
+    <label>Mental & Emotional Symptoms <span style="color:#c9a84c;font-size:10px">(Most important — §211)</span></label>
+    <textarea id="s-mental" placeholder="Mental state, fears, mood, disposition..." style="min-height:60px"></textarea>
+    <label>Physical Generals</label>
+    <input type="text" id="s-generals" placeholder="Thermals, thirst, appetite, sleep, sweat...">
+    <label>Modalities</label>
+    <input type="text" id="s-modalities" placeholder="Better/Worse: time, weather, position, food...">
+    <div class="hint">§133 — Note conditions under which symptoms appear</div>
+    <label>Dominant Miasm (§78–81)</label>
+    <div class="miasm">
+      <button class="psora" id="m-psora" onclick="toggleMiasm('psora')">Psora</button>
+      <button class="sycosis" id="m-sycosis" onclick="toggleMiasm('sycosis')">Sycosis</button>
+      <button class="syphilis" id="m-syphilis" onclick="toggleMiasm('syphilis')">Syphilis</button>
+      <button class="tubercular" id="m-tubercular" onclick="toggleMiasm('tubercular')">Tubercular</button>
+    </div>
+    <label>Quick Tags</label>
+    <div class="tags">
+      <button onclick="addTag('s-complaint','burning pains')">🔥 Burning</button>
+      <button onclick="addTag('s-modalities','worse at night')">🌙 Worse night</button>
+      <button onclick="addTag('s-generals','thirst for cold water')">💧 Thirst cold</button>
+      <button onclick="addTag('s-mental','restlessness and anxiety')">⚡ Restless</button>
+      <button onclick="addTag('s-mental','fear of death')">😨 Fear death</button>
+      <button onclick="addTag('s-modalities','better by warmth')">☀️ Better warmth</button>
+      <button onclick="addTag('s-mental','weeping tendency')">😢 Weeping</button>
+      <button onclick="addTag('s-mental','fastidious and anxious')">🧹 Fastidious</button>
+    </div>
+    <button class="btn" id="btn-remedy" onclick="findRemedy()">Find Simillimum (§189) →</button>
+    <div class="loading" id="l-remedy">Analysing by totality of symptoms...</div>
+    <div class="result" id="r-remedy"></div>
+  </div>
+</div>
+
+<!-- REPERTORY -->
+<div id="repertory" class="panel">
+  <div class="quote">
+    <div class="qt">Organon Principle</div>
+    <p>"The totality of symptoms must be the principal, or the only thing the physician has to take note of."</p>
+    <small>§7 — Organon of Medicine, 6th Edition</small>
+  </div>
+  <div class="card">
+    <h3>📋 AI Repertorization &nbsp;<small style="font-size:10px;background:#f0e0a0;color:#7a5c10;padding:2px 7px;border-radius:6px;">§7 Totality</small></h3>
+    <label>Mental Generals (Highest Grade — §211)</label>
+    <textarea id="r-mental" placeholder="Will, Emotions, Intellect — highest value..." style="min-height:60px"></textarea>
+    <label>Physical Generals (§209)</label>
+    <textarea id="r-physical" placeholder="Thermals, thirst, perspiration, appetite, sleep..." style="min-height:60px"></textarea>
+    <label>Peculiar / Characteristic Symptoms (§153) ★</label>
+    <textarea id="r-peculiar" placeholder="Strange, rare, uncommon symptoms — highest weight per §153..."></textarea>
+    <div class="hint">§153 — The more striking, singular, uncommon — the more weightage</div>
+    <label>Common Particulars</label>
+    <textarea id="r-common" placeholder="Local symptoms, pathological findings..." style="min-height:55px"></textarea>
+    <label>Miasmatic Background (§78)</label>
+    <input type="text" id="r-miasm" placeholder="Psoric / Sycotic / Syphilitic / Tubercular...">
+    <button class="btn" id="btn-rep" onclick="repertorize()">Repertorize (Kent Method) →</button>
+    <div class="loading" id="l-rep">Repertorizing with Organon principles...</div>
+    <div class="result" id="r-rep"></div>
+  </div>
+</div>
+
+<!-- CASE TAKING -->
+<div id="case" class="panel">
+  <div class="quote">
+    <div class="qt">Organon Principle</div>
+    <p>"The patient narrates the history of his sufferings... the physician listens attentively and notes down everything."</p>
+    <small>§84 — Organon of Medicine, 6th Edition</small>
+  </div>
+
+  <!-- SUB TABS -->
+  <div style="display:flex;gap:0;margin-bottom:12px;border-radius:10px;overflow:hidden;border:1px solid #b5c4b1;">
+    <button id="ctab-form" onclick="switchCaseTab('form')" style="flex:1;padding:9px 4px;font-size:11px;font-weight:bold;border:none;background:#1e3a2f;color:#c9a84c;cursor:pointer;">📋 PROFORMA</button>
+    <button id="ctab-chat" onclick="switchCaseTab('chat')" style="flex:1;padding:9px 4px;font-size:11px;font-weight:bold;border:none;background:#f2ead8;color:#52796f;cursor:pointer;">🤖 AI CHAT</button>
+    <button id="ctab-saved" onclick="switchCaseTab('saved')" style="flex:1;padding:9px 4px;font-size:11px;font-weight:bold;border:none;background:#f2ead8;color:#52796f;cursor:pointer;">💾 SAVED</button>
+  </div>
+
+  <!-- PROFORMA PANEL -->
+  <div id="cpanel-form">
+
+    <!-- PATIENT BASIC INFO -->
+    <div class="card">
+      <h3>👤 Patient Information</h3>
+      <label>Patient Name</label>
+      <input type="text" id="pf-name" placeholder="Full name...">
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Age</label><input type="text" id="pf-age" placeholder="e.g. 35 yrs"></div>
+        <div style="flex:1"><label>Gender</label>
+          <select id="pf-gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+      </div>
+      <label>Chief Complaint</label>
+      <textarea id="pf-complaint" placeholder="Main suffering of the patient..." style="min-height:65px"></textarea>
+      <label>Duration</label>
+      <input type="text" id="pf-duration" placeholder="Since how long...">
+    </div>
+
+    <!-- PHYSICAL GENERALS -->
+    <div class="card">
+      <h3>🏃 Physical Generals <small style="font-size:10px;color:#52796f">(§209)</small></h3>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Built</label>
+          <select id="pf-built"><option value="">Select</option><option>Lean</option><option>Medium</option><option>Stout</option><option>Obese</option></select></div>
+        <div style="flex:1"><label>Appetite</label>
+          <select id="pf-appetite"><option value="">Select</option><option>Good</option><option>Poor</option><option>Excess</option><option>Variable</option><option>Ravenous</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Thirst</label>
+          <select id="pf-thirst"><option value="">Select</option><option>Thirsty</option><option>Thirstless</option><option>Thirst for large qty</option><option>Thirst for small qty</option><option>Thirst for cold</option><option>Thirst for warm</option></select></div>
+        <div style="flex:1"><label>Urine</label>
+          <select id="pf-urine"><option value="">Select</option><option>Normal</option><option>Burning</option><option>Frequent</option><option>Scanty</option><option>Profuse</option><option>Offensive</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Stool</label>
+          <select id="pf-stool"><option value="">Select</option><option>Regular</option><option>Constipated</option><option>Loose</option><option>Alternating</option><option>Hard</option><option>Mucus</option><option>Bloody</option></select></div>
+        <div style="flex:1"><label>Sleep</label>
+          <select id="pf-sleep"><option value="">Select</option><option>Sound</option><option>Disturbed</option><option>Sleepless</option><option>Sleepy</option><option>Unrefreshing</option><option>Late night</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Perspiration</label>
+          <select id="pf-perspiration"><option value="">Select</option><option>Normal</option><option>Profuse</option><option>Scanty</option><option>Offensive</option><option>Night sweats</option><option>Cold sweat</option></select></div>
+        <div style="flex:1"><label>Addictions</label>
+          <select id="pf-addictions"><option value="">Select</option><option>None</option><option>Tea</option><option>Coffee</option><option>Tobacco</option><option>Alcohol</option><option>Tea & Coffee</option></select></div>
+      </div>
+      <label>Desires ✓ <small style="color:#52796f;font-weight:normal;">(tap to select)</small></label>
+      <div class="tags" id="pf-desires-tags" style="margin-bottom:8px;">
+        <button onclick="pfToggleTag(this,'pf-desires','Cold drinks')">Cold drinks</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Warm drinks')">Warm drinks</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Ice-cold drinks')">Ice-cold</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Sweet')">Sweet</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Sour')">Sour</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Spicy')">Spicy</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Salty')">Salty</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Bitter')">Bitter</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Milk')">Milk</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Eggs')">Eggs</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Fish')">Fish</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Meat')">Meat</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Fruits')">Fruits</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Juicy')">Juicy</button>
+        <button onclick="pfToggleTag(this,'pf-desires','Indigestible')">Indigestible</button>
+      </div>
+      <input type="text" id="pf-desires" placeholder="Selected desires..." style="display:none;">
+      <label>Aversions ✗ <small style="color:#52796f;font-weight:normal;">(tap to select)</small></label>
+      <div class="tags" id="pf-aversions-tags" style="margin-bottom:8px;">
+        <button onclick="pfToggleTag(this,'pf-aversions','Cold drinks')">Cold drinks</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Warm drinks')">Warm drinks</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Sweet')">Sweet</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Sour')">Sour</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Spicy')">Spicy</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Salty')">Salty</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Milk')">Milk</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Eggs')">Eggs</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Fish')">Fish</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Meat')">Meat</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Fats')">Fats</button>
+        <button onclick="pfToggleTag(this,'pf-aversions','Vegetables')">Vegetables</button>
+      </div>
+      <input type="text" id="pf-aversions" placeholder="Selected aversions..." style="display:none;">
+      <label>Thermal Reaction</label>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <button id="pf-t-hot" onclick="pfThermal('hot')" style="flex:1;padding:8px;border-radius:7px;border:1.5px solid #ad7a7a;color:#6b1e1e;background:#fff;font-size:12px;cursor:pointer;">🔥 Hot</button>
+        <button id="pf-t-chilly" onclick="pfThermal('chilly')" style="flex:1;padding:8px;border-radius:7px;border:1.5px solid #7a9aad;color:#1e4f6b;background:#fff;font-size:12px;cursor:pointer;">❄️ Chilly</button>
+        <button id="pf-t-ambi" onclick="pfThermal('ambi')" style="flex:1;padding:8px;border-radius:7px;border:1.5px solid #7aad8a;color:#2e6b42;background:#fff;font-size:12px;cursor:pointer;">〰️ Ambi</button>
+      </div>
+      <label>Allergy / Disagree</label>
+      <input type="text" id="pf-allergy" placeholder="Any allergies...">
+    </div>
+
+    <!-- MENTAL / EMOTIONAL -->
+    <div class="card">
+      <h3>🧠 Mental & Emotional <small style="font-size:10px;color:#52796f">(§211 — Highest)</small></h3>
+      <label>Mood / Disposition</label>
+      <div class="tags" style="margin-bottom:8px;">
+        <button onclick="pfToggleTag(this,'pf-mental','Anxious')">😰 Anxious</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Irritable')">😠 Irritable</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Sad/Depressed')">😢 Sad</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Weeping')">😭 Weeping</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Restless')">⚡ Restless</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Fearful')">😨 Fearful</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Fastidious')">🧹 Fastidious</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Indifferent')">😑 Indifferent</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Jealous')">💚 Jealous</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Sympathetic')">🤗 Sympathetic</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Timid')">🐣 Timid</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Obstinate')">😤 Obstinate</button>
+      </div>
+      <label>Fears</label>
+      <div class="tags" style="margin-bottom:8px;">
+        <button onclick="pfToggleTag(this,'pf-mental','Fear of death')">Fear of death</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Fear of disease')">Fear of disease</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Fear of dark')">Fear of dark</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Fear of crowd')">Fear of crowd</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Fear of alone')">Fear of alone</button>
+        <button onclick="pfToggleTag(this,'pf-mental','Fear of heights')">Fear of heights</button>
+      </div>
+      <label>Additional Mental Notes</label>
+      <textarea id="pf-mental" placeholder="Other mental/emotional details..." style="min-height:60px"></textarea>
+    </div>
+
+    <!-- MODALITIES -->
+    <div class="card">
+      <h3>⬆️⬇️ Modalities <small style="font-size:10px;color:#52796f">(§133)</small></h3>
+      <label>Better (Amelioration) — tap to select</label>
+      <div class="tags" style="margin-bottom:8px;">
+        <button onclick="pfToggleTag(this,'pf-better','Warmth')">☀️ Warmth</button>
+        <button onclick="pfToggleTag(this,'pf-better','Cold')">❄️ Cold</button>
+        <button onclick="pfToggleTag(this,'pf-better','Rest')">🛋️ Rest</button>
+        <button onclick="pfToggleTag(this,'pf-better','Motion')">🚶 Motion</button>
+        <button onclick="pfToggleTag(this,'pf-better','Eating')">🍽️ Eating</button>
+        <button onclick="pfToggleTag(this,'pf-better','Open air')">🌬️ Open air</button>
+        <button onclick="pfToggleTag(this,'pf-better','Lying down')">🛏️ Lying</button>
+        <button onclick="pfToggleTag(this,'pf-better','Pressure')">👋 Pressure</button>
+      </div>
+      <input type="text" id="pf-better" placeholder="Add more...">
+      <label>Worse (Aggravation) — tap to select</label>
+      <div class="tags" style="margin-bottom:8px;">
+        <button onclick="pfToggleTag(this,'pf-worse','Night')">🌙 Night</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Morning')">🌅 Morning</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Cold')">❄️ Cold</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Heat')">🔥 Heat</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Motion')">🚶 Motion</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Rest')">🛋️ Rest</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Exertion')">💪 Exertion</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Eating')">🍽️ Eating</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Damp')">💧 Damp</button>
+        <button onclick="pfToggleTag(this,'pf-worse','Touch')">👆 Touch</button>
+      </div>
+      <input type="text" id="pf-worse" placeholder="Add more...">
+    </div>
+
+    <!-- FEMALE HISTORY -->
+    <div class="card">
+      <h3>♀️ Female History</h3>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Menstrual Cycle</label>
+          <select id="pf-menstrual"><option value="">Select</option><option>Regular</option><option>Irregular</option><option>Scanty</option><option>Profuse</option><option>Absent</option><option>Painful</option><option>Clots</option></select></div>
+        <div style="flex:1"><label>Leucorrhoea</label>
+          <select id="pf-leucorrhoea"><option value="">Select</option><option>Absent</option><option>Present — White</option><option>Present — Yellow</option><option>Present — Green</option><option>Offensive</option><option>Burning</option><option>Itching</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>LMP</label><input type="text" id="pf-lmp" placeholder="Date..."></div>
+        <div style="flex:1"><label>Obstetric (G/P/A)</label><input type="text" id="pf-obstetric" placeholder="e.g. G2P1A1"></div>
+      </div>
+      <label>Mother's Sufferings During Pregnancy</label>
+      <input type="text" id="pf-mother-preg" placeholder="If any...">
+    </div>
+
+    <!-- CHILDHOOD HISTORY -->
+    <div class="card">
+      <h3>👶 Childhood History</h3>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Birth History</label>
+          <select id="pf-birth"><option value="">Select</option><option>Normal</option><option>LSCS</option><option>Forceps</option><option>Premature</option><option>Post-term</option></select></div>
+        <div style="flex:1"><label>Milestones</label>
+          <select id="pf-milestones"><option value="">Select</option><option>Normal</option><option>Delayed</option><option>Advanced</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Immunizations</label>
+          <select id="pf-immunizations"><option value="">Select</option><option>Complete</option><option>Incomplete</option><option>Not done</option><option>Unknown</option></select></div>
+        <div style="flex:1"><label>Childhood Diseases</label>
+          <input type="text" id="pf-childhood-dis" placeholder="Measles, chickenpox..."></div>
+      </div>
+    </div>
+
+    <!-- PAST & FAMILY HISTORY -->
+    <div class="card">
+      <h3>📜 Past & Family History <small style="font-size:10px;color:#52796f">(§88–89)</small></h3>
+      <label>Past History</label>
+      <textarea id="pf-past" placeholder="Previous illnesses, surgeries, accidents, vaccinations, suppressions..." style="min-height:65px"></textarea>
+      <label>Family History</label>
+      <textarea id="pf-family" placeholder="Parents, siblings — TB, diabetes, cancer, hypertension, psora, miasms..." style="min-height:65px"></textarea>
+    </div>
+
+    <!-- PHYSICAL CHARACTERISTICS -->
+    <div class="card">
+      <h3>🔍 Physical Characteristics</h3>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Weight</label><input type="text" id="pf-weight" placeholder="kg"></div>
+        <div style="flex:1"><label>Height</label><input type="text" id="pf-height" placeholder="cm/ft"></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Face</label>
+          <select id="pf-face"><option value="">Select</option><option>Pale</option><option>Red/Flushed</option><option>Yellowish</option><option>Dark</option><option>Puffed</option><option>Emaciated</option><option>Oily</option></select></div>
+        <div style="flex:1"><label>Eyes</label>
+          <select id="pf-eyes"><option value="">Select</option><option>Normal</option><option>Sunken</option><option>Puffed</option><option>Discharge</option><option>Redness</option><option>Dull</option><option>Bright</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Tongue</label>
+          <select id="pf-tongue"><option value="">Select</option><option>Clean</option><option>White coated</option><option>Yellow coated</option><option>Dry</option><option>Moist</option><option>Cracked</option><option>Red tip</option><option>Trembling</option></select></div>
+        <div style="flex:1"><label>Lips</label>
+          <select id="pf-lips"><option value="">Select</option><option>Normal</option><option>Dry</option><option>Cracked</option><option>Pale</option><option>Red</option><option>Bluish</option></select></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Skin</label>
+          <select id="pf-skin"><option value="">Select</option><option>Normal</option><option>Dry</option><option>Oily</option><option>Rough</option><option>Eruptions</option><option>Pale</option><option>Yellowish</option><option>Dark</option></select></div>
+        <div style="flex:1"><label>Nails</label>
+          <select id="pf-nails"><option value="">Select</option><option>Normal</option><option>Brittle</option><option>Ridged</option><option>Pale</option><option>Bluish</option><option>Clubbed</option></select></div>
+      </div>
+    </div>
+
+    <!-- VITAL DATA -->
+    <div class="card">
+      <h3>💊 Vital Data</h3>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>Temp.</label><input type="text" id="pf-temp" placeholder="°F/°C"></div>
+        <div style="flex:1"><label>Pulse</label><input type="text" id="pf-pulse" placeholder="/min"></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1"><label>B.P.</label><input type="text" id="pf-bp" placeholder="mmHg"></div>
+        <div style="flex:1"><label>R.R.</label><input type="text" id="pf-rr" placeholder="/min"></div>
+      </div>
+      <label>SpO₂</label>
+      <input type="text" id="pf-spo2" placeholder="%">
+      <label>Pain Scale (NPRS 0–10)</label>
+      <div style="padding:6px 0 4px;">
+        <input type="range" id="pf-pain" min="0" max="10" value="0" oninput="document.getElementById('pf-pain-val').textContent=this.value" style="width:100%;accent-color:#1e3a2f;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:#52796f;">
+          <span>0 None</span><span id="pf-pain-val" style="font-weight:bold;color:#1e3a2f;font-size:14px;">0</span><span>10 Severe</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAMINATION & DIAGNOSIS -->
+    <div class="card">
+      <h3>🏥 Examination & Diagnosis</h3>
+      <label>Systemic / Local Examination</label>
+      <textarea id="pf-examination" placeholder="Clinical findings..." style="min-height:60px"></textarea>
+      <label>Provisional Diagnosis</label>
+      <input type="text" id="pf-prov-diag" placeholder="Clinical diagnosis...">
+      <label>Differential Diagnosis</label>
+      <input type="text" id="pf-diff-diag" placeholder="Other possibilities...">
+      <label>Investigations</label>
+      <input type="text" id="pf-investigations" placeholder="CBC, X-ray, USG...">
+      <label>Diagnosis of Disease</label>
+      <input type="text" id="pf-diagnosis" placeholder="Final diagnosis...">
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <button class="btn" style="flex:1;background:#52796f;" onclick="pfSave()">💾 Save Case</button>
+      <button class="btn" style="flex:1;" onclick="pfGetRemedy()">🌿 Get AI Remedy</button>
+    </div>
+    <button class="btn btn-call" onclick="pfClear()">⟳ Clear Form</button>
+    <div class="loading" id="l-pf">Analysing case per Organon §83–104...</div>
+    <div class="result" id="r-pf"></div>
+  </div>
+
+  <!-- AI CHAT PANEL -->
+  <div id="cpanel-chat" style="display:none;">
+    <div class="card">
+      <h3>🩺 AI Case Taking (§83–104)</h3>
+      <div class="chat-box" id="chatbox">
+        <div class="msg bot">Namaste Doctor 🙏 I will guide you through complete case taking per §83–104 of the Organon of Medicine (6th Ed.).
+
+Please begin: What is the patient's chief complaint?</div>
+      </div>
+      <div class="chat-row">
+        <input type="text" id="chat-in" placeholder="Enter patient details..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+      <div class="loading" id="l-chat">Thinking...</div>
+      <button class="btn btn-call" style="margin-top:8px" onclick="clearChat()">⟳ New Case</button>
+    </div>
+  </div>
+
+  <!-- SAVED CASES PANEL -->
+  <div id="cpanel-saved" style="display:none;">
+    <div class="card">
+      <h3>💾 Saved Cases</h3>
+      <div id="saved-list"><p style="color:#52796f;font-size:13px;text-align:center;padding:20px 0;">No saved cases yet.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MATERIA MEDICA -->
+<div id="materia" class="panel">
+  <div class="quote">
+    <div class="qt">Organon Principle</div>
+    <p>"We must find the drug which has the greatest tendency to produce symptoms similar to those of the disease to be cured."</p>
+    <small>§27 — Organon of Medicine, 6th Edition</small>
+  </div>
+  <div class="card">
+    <h3>📖 Materia Medica &nbsp;<small style="font-size:10px;background:#f0e0a0;color:#7a5c10;padding:2px 7px;border-radius:6px;">§27 Similia</small></h3>
+    <label>Remedy Name</label>
+    <input type="text" id="mm-remedy" placeholder="e.g. Arsenicum album, Pulsatilla...">
+    <label>Explore</label>
+    <select id="mm-aspect">
+      <option value="essence">Essence & Constitution (§153)</option>
+      <option value="mental">Mental Picture & Will (§211)</option>
+      <option value="generals">Physical Generals (§209)</option>
+      <option value="keynotes">Keynotes & Characteristic Symptoms</option>
+      <option value="modalities">Modalities — Better & Worse</option>
+      <option value="miasm">Miasmatic Background (§78–81)</option>
+      <option value="compare">Compare Similar Remedies (§153)</option>
+      <option value="potency">Potency & Dose (§246–248, 6th Ed.)</option>
+      <option value="clinical">Clinical Indications & Diseases</option>
+    </select>
+    <label>Polychrests</label>
+    <div class="tags">
+      <button onclick="setR('Arsenicum album')">Ars alb</button>
+      <button onclick="setR('Pulsatilla nigricans')">Pulsatilla</button>
+      <button onclick="setR('Nux vomica')">Nux vom</button>
+      <button onclick="setR('Sulphur')">Sulphur</button>
+      <button onclick="setR('Lycopodium clavatum')">Lycopodium</button>
+      <button onclick="setR('Natrum muriaticum')">Nat mur</button>
+      <button onclick="setR('Calcarea carbonica')">Calc carb</button>
+      <button onclick="setR('Phosphorus')">Phosphorus</button>
+      <button onclick="setR('Sepia officinalis')">Sepia</button>
+      <button onclick="setR('Lachesis mutus')">Lachesis</button>
+    </div>
+    <button class="btn" id="btn-mm" onclick="exploreMateria()">Explore Remedy →</button>
+    <div class="loading" id="l-mm">Loading materia medica...</div>
+    <div class="result" id="r-mm"></div>
+  </div>
+</div>
+
+<!-- CLINIC -->
+<div id="clinic" class="panel">
+  <div class="doc-card">
+    <div class="doc-avatar">👨‍⚕️</div>
+    <div class="doc-name">Dr. J C Patel</div>
+    <div class="doc-title">Homeopathic Physician · Classical Homeopathy</div>
+    <div class="doc-since">Practising Classical Homeopathy since 2022</div>
+  </div>
+  <div class="card">
+    <h3>🏥 LifeCare Clinic</h3>
+    <div class="info-row">
+      <div class="info-icon">📍</div>
+      <div><div class="info-label">Address</div><div class="info-val">Life Care Clinic<br>Surat, Gujarat</div></div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon">🕐</div>
+      <div><div class="info-label">Timings</div><div class="info-val"><span class="timing-pill">Morning</span> 10:00 AM – 1:00 PM<br><span class="timing-pill">Evening</span> 5:00 PM – 8:00 PM</div></div>
+    </div>
+    <div class="info-row">
+      <div class="info-icon">📞</div>
+      <div><div class="info-label">Contact</div><div class="info-val" style="font-weight:bold;font-size:15px;">+91 72030 04050</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📅 Book Appointment</h3>
+    <label>Patient Name</label>
+    <input type="text" id="apt-name" placeholder="Full name of patient...">
+    <label>Age & Gender</label>
+    <input type="text" id="apt-age" placeholder="e.g. 35 years, Male">
+    <label>Preferred Date & Time</label>
+    <input type="text" id="apt-date" placeholder="e.g. 28 March, Morning / Evening">
+    <label>Chief Complaint</label>
+    <textarea id="apt-complaint" placeholder="Brief description of the problem..." style="min-height:65px"></textarea>
+    <button class="btn btn-wa" onclick="bookWhatsApp()">💬 Send via WhatsApp</button>
+    <button class="btn btn-call" onclick="callClinic()">📞 Call — 72030 04050</button>
+  </div>
+  <div class="quote">
+    <div class="qt">Our Philosophy</div>
+    <p>"The physician's highest and only calling is to make the sick healthy, to cure, as it is called."</p>
+    <small>§1 — Organon of Medicine, 6th Edition · Dr. Samuel Hahnemann</small>
+  </div>
+
+  <!-- LOGIN LOG — only visible in Clinic tab -->
+  <div class="card" id="login-log-card">
+    <h3>🔐 Login Activity Log
+      <small style="font-size:10px;background:#f0e0a0;color:#7a5c10;padding:2px 7px;border-radius:6px;margin-left:6px;">Only you see this</small>
+    </h3>
+    <div id="login-log-list">
+      <p style="color:#52796f;font-size:13px;text-align:center;padding:16px 0;">No logins recorded yet.</p>
+    </div>
+    <button class="btn btn-call" style="margin-top:8px;font-size:12px;" onclick="clearLoginLog()">🗑 Clear Log</button>
+  </div>
+</div>
+
+<script>
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+let chatHistory = [];
+let miasm = '';
+
+const ORGANON_BASE = `You are a master homeopathic physician with complete command of the Organon of Medicine, 6th Edition by Dr. Samuel Hahnemann (§1–§291), AND all four classical materia medicas, AND all four major repertories. Every clinical decision must be governed by the whole Organon AND cross-referenced across these sources.
+
+━━━ MATERIA MEDICA SOURCES ━━━
+
+1. BOERICKE'S MATERIA MEDICA (William Boericke):
+   Clinically oriented drug pictures, clear keynotes, therapeutic indications, head-to-toe symptom coverage, remedy relationships (complementary, inimical, antidotes). Use for: clinical keynotes, therapeutic sphere, remedy relationships.
+
+2. KENT'S MATERIA MEDICA (James Tyler Kent — Lectures on MM):
+   Deep philosophical drug pictures, emphasis on mental/emotional picture (§211), hierarchical: mind > generals > particulars. Essence and constitutional type of each remedy. Use for: mental picture, remedy essence, constitutional depth.
+
+3. CLARKE'S DICTIONARY OF MATERIA MEDICA (John Henry Clarke, 3 vols):
+   Encyclopedic classical reference, rich clinical confirmations, provings from multiple sources, detailed pathogenesis, clinical hints and historical experience. Use for: provings, clinical confirmations, historical data, rare symptoms.
+
+4. ALLEN'S ENCYCLOPEDIA OF PURE MATERIA MEDICA (T.F. Allen, 10 vols):
+   The most complete original proving records — symptoms exactly as recorded by provers. Highest fidelity to Organon §105-§120. Use for: original proving symptoms, rare/peculiar symptoms (§153), pure drug pathogenesis.
+
+CROSS-REFERENCE RULE: For every remedy, synthesize across all four — Allen for original provings, Kent for mental essence, Boericke for clinical keynotes, Clarke for confirmations. Note agreements and contradictions between sources.
+
+━━━ REPERTORY SOURCES ━━━
+
+1. KENT'S REPERTORY (J.T. Kent):
+   Classical standard, 3-grade system (Bold/Italic/Plain), hierarchical: Mind > Generals > Particulars. Best for mental rubrics and generals. Chapters follow anatomical + physiological structure.
+
+2. SYNTHESIS REPERTORY (Frederik Schroyens):
+   Modern comprehensive repertory integrating Kent + Boericke + Clarke + Allen + modern provings. Colour-graded with source references. Use for: comprehensive rubric coverage and modern additions.
+
+3. RADAR / COMPLETE REPERTORY (Roger van Zandvoort):
+   Most extensive computer-based repertory. Maximum rubric coverage, cross-referencing, all classical + modern sources. Use for: complex cases, broad rubric search, verification across sources.
+
+4. BOERICKE'S REPERTORY (William Boericke):
+   Clinically oriented, therapeutically structured by clinical conditions. Excellent for acute prescribing and disease-specific rubrics. Use for: clinical/therapeutic rubrics, acute cases, pathological prescribing.
+
+REPERTORY CROSS-REFERENCE RULE: Start with Kent's for mental/general rubrics → expand to Synthesis/Complete for additional coverage → confirm with Boericke's Repertory for clinical rubrics. When a remedy appears in high grades across multiple repertories = strong indication. When repertories disagree = go back to materia medica.
+
+━━━ ORGANON OF MEDICINE — 6th EDITION (§1–§291) ━━━
+The complete unified philosophy of Hahnemann.
+
+THE COMPLETE ORGANON FRAMEWORK (6th Edition):
+
+PART 1 — THE PHYSICIAN'S MISSION & PRINCIPLES (§1–§70):
+§1: The highest ideal of cure — rapid, gentle, permanent restoration of health
+§2: The highest ideal of the physician — make the sick healthy
+§3: What the physician needs to know — what is curable, what is curative, how to apply
+§4: The physician as preserver of health, knows obstacles to recovery
+§6: Disease = totality of symptoms; the perceptible signs ARE the disease
+§7: The totality of symptoms is the principal guide to cure; unprejudiced observation
+§8: When symptoms are removed, the disease is cured — cure of the whole
+§9: The vital force (Dynamis) — governs all sensation and function
+§10: The vital force in disease — produces abnormal sensations and functions
+§11: Disease originates in the immaterial vital force; dynamic derangement
+§12: Only the vital force can be deranged and restored; not material causes
+§16: Medicines act dynamically on the vital force
+§17: Remove the totality of symptoms = remove the disease (complete cure)
+§18: Only by symptoms can disease be known and treated
+§19: Medicines cure by dynamic action on vital force through symptoms
+§20: Medicines explored through provings on healthy persons
+§21: The curative power of medicine = its capacity to produce symptoms
+§22: Similia Similibus Curentur — like cures like (foundational law)
+§23–§26: Only similars, never contraries, produce lasting cure
+§27: The curative power of medicine depends on symptoms similar to the disease
+§28: The law of similars: natural law established by experience
+§29: Why similars cure — dynamic explanation via vital force
+§34–§36: Similar disease removes dissimilar; stronger removes weaker (dynamic laws)
+§52: Two methods of cure — allopathic (wrong) vs homeopathic (correct)
+§55–§70: Homeopathic vs allopathic vs isopathic — only homeopathic is true cure
+
+PART 2 — INVESTIGATION OF DISEASE (§71–§104):
+§71: Three prerequisites for cure — know the disease, know the medicine, apply correctly
+§72: Classification of diseases — acute vs chronic
+§73: Acute diseases — individual, sporadic, epidemic, miasmatic acute
+§74: Chronic diseases from allopathic suppression (physician-created)
+§75: Iatrogenic chronic diseases — worst of all chronic diseases
+§76: Natural chronic diseases from miasms — psora, sycosis, syphilis
+§77: Apparent (improper) chronic diseases from removable causes
+§78: Chronic miasms — the true source of most chronic disease
+§79–§81: Psora as the oldest and most widespread miasm; sycosis; syphilis
+§82: Psora underlies most chronic non-venereal diseases
+§83: The individualising examination — unprejudiced, careful observation
+§84: Patient narrates freely; physician listens, notes everything, does not interrupt
+§85: Physician writes down the patient's own words
+§86: Note onset, duration, course; what was done before
+§87: Never suggest symptoms; only ask open questions
+§88: Past medical history; previous treatments; suppressions
+§89: Family history for miasmatic background
+§90: After patient finishes, explore each symptom in detail
+§91: Symptoms arising from previous medicines must be distinguished
+§92: When disease began after a specific event — note it
+§93: Ask about mental and emotional state — most important (also §211)
+§94: Physical generals — thermals, thirst, appetite, digestion, sleep, sweat, sexual sphere
+§95: Chronic cases require most detailed investigation
+§96–§98: Peculiar, unusual, uncommon symptoms — these are most characteristic
+§99: Epidemic cases — collective symptoms of the epidemic genius
+§100–§102: Epidemic totality — genus epidemicus determined from group
+§103: Psoric basis of most chronic diseases; anti-psoric treatment
+§104: Once the full image of the disease is recorded, the cure begins
+
+PART 3 — THE HOMEOPATHIC REMEDY (§105–§145):
+§105: The physician must know the powers of medicines (materia medica)
+§106: Medicines tested on healthy human provers — the only true source
+§107–§108: Provings on healthy, sensitive, unprejudiced provers
+§109: Provings give the complete drug picture — mental, general, particular
+§110: Each medicine produces its own characteristic symptom-set
+§111: These drug symptoms are the basis of homeopathic prescribing
+§112: Primary and secondary actions of medicines
+§113–§114: Primary action = drug's own power; secondary = vital force's reaction
+§115: Alternating symptoms in provings
+§116: Some symptoms appear only in unhealthy provers
+§117: Idiosyncrasies — individual hypersensitivities
+§118: Each medicine has its own distinct sphere of action
+§119: No two medicines are completely identical in action
+§120: Medicines must be proved in their pure, unmixed state
+§121–§125: Method of drug proving — dose, repetition, recording
+§126–§129: Proving on healthy persons of both sexes, all ages
+§130–§131: Recording symptoms during proving — all circumstances noted
+§132–§134: Olfaction, external application also produce symptoms
+§135–§137: Provings reveal the full range of medicinal action
+§138–§140: Collective symptoms from multiple provers = complete drug picture
+§141–§142: Clinical symptoms (cured cases) supplement provings
+§143–§145: Materia medica pura — the true homeopathic materia medica
+
+PART 4 — THE HOMEOPATHIC CURE (§146–§203):
+§146: Apply the most similar remedy found by comparing totalities
+§147: The more similar the remedy, the more certain and rapid the cure
+§148: The law of similars explained through vital force dynamics
+§149: Rapid, gentle, permanent cure only through the most similar remedy
+§150: Slight indispositions — do not over-prescribe for trivial ailments
+§151: The more numerous and characteristic the symptoms, the easier the selection
+§152: Few-symptom cases are the most difficult to cure
+§153: Prescribe on the MOST STRIKING, SINGULAR, UNCOMMON, PECULIAR symptoms — these are the surest guide
+§154: The simillimum must cover the totality, especially characteristic symptoms
+§155–§157: The homeopathic aggravation — a sign of correct remedy
+§158–§160: Duration and management of homeopathic aggravation
+§161: LM (Q) potencies produce least aggravation — key 6th edition teaching
+§162: Partial similarity — when only some symptoms are covered
+§163: Obstacles to cure — maintaining causes must be removed
+§164–§167: One-sided diseases — local diseases; do not treat locally
+§168–§171: Local diseases are expressions of the internal disease (vital force)
+§172–§184: Few-symptom cases; incomplete drug pictures; adjuncts
+§185–§203: Local diseases — never suppress externally; treat the whole person
+
+PART 5 — OBSTACLES, DIET & HYGIENE (§204–§230):
+§204: Chronic diseases require removal of all maintaining causes
+§205: The physician must identify and remove all obstacles to cure
+§206: Different chronic disease types require different approaches
+§207: Take complete history including all previous treatments
+§208: Age, constitution, lifestyle, diet, occupation — all relevant
+§209: Physical generals — part of the complete case picture
+§210: Mental and emotional diseases — most important chronic diseases
+§211: Mental and emotional symptoms — THE MOST CHARACTERISTIC in every case; must never be neglected
+§212: The physician must observe the patient's mind and disposition
+§213: Never prescribe without the mental symptoms; they complete the picture
+§214–§223: One-sided mental diseases; mania; melancholia
+§224–§227: Mental diseases from physical causes; somatic mental diseases
+§228–§230: Management and treatment of mental diseases
+§252–§256: Second prescription — what to do after first response
+§257–§258: The physician must not be attached to favorite remedies
+§259–§261: Diet and regimen during homeopathic treatment
+§262–§263: Obstacles from food, lifestyle, coffee, spices, medications
+§264–§265: Medicines must be pure and correctly prepared
+
+PART 6 — POTENCY, DOSE & REPETITION (§231–§291):
+§231–§244: Intermittent and alternating diseases; malarial fevers
+§245: The dose must be the minimum — no crude doses
+§246: The correctly chosen remedy in appropriate potency
+§247: Repetition — the dose must be repeated at the right intervals
+§248: LM (Q) potencies can be repeated daily — revolutionary 6th edition teaching
+§249: Wrong remedy, wrong potency — signs of incorrect prescription
+§250: If no reaction — potency too low or remedy wrong
+§251: Medicines with rapid action — short intervals; slow — longer
+§252: If the remedy acts well — do not interrupt (wait and observe)
+§253: Return of old symptoms during cure — good prognonic sign
+§254: New symptoms appearing — reconsider the remedy
+§255: Antidotes — remedies that counteract wrong prescriptions
+§256: The second prescription — based on new totality after first remedy
+§257: Do not change remedy unnecessarily
+§258: The physician must be master of the materia medica
+§259–§261: Diet: avoid all medicinal substances in food and environment
+§270: Preparation of homeopathic medicines — potentization process
+§271: Centesimal scale (C) — 1:99 dilution with succussion
+§272: Single dose at one time; not multiple remedies
+§273: NEVER give more than one remedy at a time (single remedy rule)
+§274: The remedy must be in appropriate potency for the individual
+§275: The dose — always smallest possible effective dose
+§276: Danger of too large a dose — unnecessary aggravation
+§277: Higher potencies act deeper and longer; lower potencies more superficially
+§278: Finding the right potency — individual sensitivity matters
+§279: The perfectly chosen remedy in the proper potency cures without aggravation
+§280: Repetition of the dose — only when previous action is exhausted
+§281–§285: LM (Q) potency scale — 1:50,000 dilution; introduced in 6th edition
+§286: Olfaction of the remedy — valid method of administration
+§287: Water doses — dissolve in water for sensitive patients
+§288: Plussing method — adding water succussions before each dose
+§289: External application of medicines — only when internal remedy acts
+§290: Massage and manipulation — adjuncts only
+§291: Mineral baths — adjunctive use only
+
+CORE PHILOSOPHICAL PRINCIPLES (from the whole Organon):
+1. SIMILIA SIMILIBUS CURENTUR (§22–§27): Like cures like — the fundamental law
+2. VITAL FORCE (§9–§12, §16): The immaterial dynamis governs all life processes
+3. TOTALITY OF SYMPTOMS (§6–§7, §17–§18): The complete symptom-picture IS the disease
+4. INDIVIDUALIZATION (§83, §153): Each patient is unique; treat the individual, not the disease
+5. SINGLE REMEDY (§273): Only one medicine at a time — never polypharmacy
+6. MINIMUM DOSE (§245, §275–§279): The smallest effective dose to stimulate the vital force
+7. CHARACTERISTIC SYMPTOMS (§153): Strange, rare, peculiar symptoms are the surest guide
+8. MENTAL SYMPTOMS FIRST (§211–§213): Mind and disposition are most characteristic
+9. MIASMATIC THEORY (§78–§82): Chronic diseases rooted in psora, sycosis, syphilis
+10. DYNAMIC MEDICINE (§16, §269–§271): Potentization liberates the spirit-like medicinal power
+11. CASE TAKING (§83–§104): Unprejudiced, complete, individualized investigation
+12. DRUG PROVING (§105–§145): Medicines known only through provings on healthy persons
+13. NON-SUPPRESSION (§168–§203): Never suppress local symptoms; treat the whole person
+14. MAINTAINING CAUSES (§204–§208): Remove all obstacles to cure
+15. LM POTENCY (§248, §270, §281–§288): 6th Edition's greatest contribution — daily repetition, minimal aggravation`;
+
+const REMEDY_SYSTEM = ORGANON_BASE + `
+
+YOU ARE PERFORMING REMEDY SELECTION BASED ON THE WHOLE ORGANON (§1–§291):
+
+STEP 1 — UNDERSTANDING DISEASE (§6–§12, §72–§82):
+- §6: Identify the totality — disease IS the totality of symptoms
+- §72–§77: Classify as acute, chronic, iatrogenic, or miasmatic chronic
+- §78–§82: Identify the dominant miasm (psora/sycosis/syphilis/tubercular)
+- §9–§12: Consider the state of the vital force — its degree of derangement
+
+STEP 2 — SYMPTOM ANALYSIS (§83–§104, §150–§153):
+- §83: Individualise completely — no two patients are alike
+- §153: HIGHEST PRIORITY to strange, rare, uncommon, peculiar symptoms
+- §211–§213: Mental/emotional symptoms are the MOST CHARACTERISTIC — never ignore
+- §209: Physical generals — thermals, thirst, appetite, sleep, sweat
+- §96–§98: Note every peculiar circumstance, sensation, modality
+- §150–§152: More symptoms = easier selection; few symptoms = harder
+
+STEP 3 — REMEDY SELECTION (§22–§29, §146–§154):
+- §22–§27: Apply Similia Similibus Curentur — the eternal law
+- §147–§149: The more similar, the more rapid and gentle the cure
+- §154: Simillimum must match the totality especially characteristic symptoms
+- §162: If only partial similarity — note this and explain
+
+STEP 4 — POTENCY SELECTION (§245–§248, §270–§291):
+- §245: Always minimum dose — never crude doses
+- §246–§248: Choose centesimal (C) or LM (Q) based on:
+  * Sensitivity of patient (§278)
+  * Acuteness vs chronicity of disease
+  * Previous suppressions (§74–§75)
+- §248 (6th Ed.): LM potencies preferred — can be repeated daily, minimal aggravation
+- §161: LM produces least homeopathic aggravation
+- §275–§279: Higher potencies for more sensitive patients; lower for less sensitive
+- §281–§288: LM scale preparation and administration details
+
+STEP 5 — MIASMATIC ASSESSMENT (§78–§82, §103):
+- Identify primary miasm driving the case
+- Suggest anti-miasmatic intercurrent if needed
+- §103: Psoric basis must be addressed in all chronic cases
+
+OUTPUT FORMAT:
+=== DISEASE ANALYSIS (Organon §6, §72–§82) ===
+Type: [Acute/Chronic/Miasmatic]
+Vital force derangement (§9–§12):
+Miasmatic background (§78–§82):
+
+=== SYMPTOM HIERARCHY (§153, §211, §209) ===
+PECULIAR symptoms (§153 — highest value):
+Mental generals (§211 — most characteristic):
+Physical generals (§209):
+Modalities & concomitants (§96–§98):
+Common/pathological symptoms (§6):
+
+=== TOP 3 REMEDIES (§146–§154) ===
+1. [REMEDY] — Simillimum score: X%
+   Organon basis (cite sections):
+   Matching peculiar symptoms (§153):
+   Mental match (§211):
+   Miasmatic coverage (§78):
+
+2. [REMEDY] — Score: X%
+   [same format]
+
+3. [REMEDY] — Score: X%
+   [same format]
+
+=== SIMILLIMUM (§22, §149, §189) ===
+Selected: [REMEDY]
+Law of Similars basis (§22–§27):
+Totality coverage (§6–§7):
+
+=== POTENCY & DOSE (§245–§248, §270–§291, 6th Ed.) ===
+Recommended potency: [LM/C with number]
+Scale justification (§248/§271):
+Dose: [per §245, §275]
+Repetition: [per §247–§248]
+Plussing method if needed (§288):
+
+=== MIASMATIC PLAN (§78–§82, §103) ===
+Primary miasm:
+Intercurrent remedy if needed:
+Anti-miasmatic strategy:
+
+=== OBSTACLES TO CURE (§204–§208, §259–§263) ===
+Maintaining causes to address:`;
+
+const REPERTORY_SYSTEM = ORGANON_BASE + `
+
+YOU ARE PERFORMING REPERTORIZATION BASED ON THE WHOLE ORGANON (§1–§291):
+
+SYMPTOM GRADING (from Organon philosophy):
+GRADE 3 — Peculiar, Characteristic, Strange-Rare-Uncommon (§153): HIGHEST WEIGHT (3 marks)
+  These are the surest guide to the simillimum per §153
+GRADE 2 — Mental Generals (§211–§213): HIGH WEIGHT (2 marks)  
+  "Mental symptoms are the most characteristic" per §211
+GRADE 2 — Physical Generals (§209): HIGH WEIGHT (2 marks)
+  Thermals, thirst, sweat, appetite, sleep — general affection of the whole
+GRADE 1 — Particular/Local symptoms: LOWER WEIGHT (1 mark)
+  Common symptoms of the disease; not individualizing per §153
+GRADE 0 — Pure pathological/common symptoms: LEAST WEIGHT
+  These could belong to any patient with the same disease
+
+REPERTORIZATION PROCESS:
+1. §83: Individualise — extract what makes THIS patient unique
+2. §153: Identify all peculiar symptoms — give maximum weight
+3. §211: Extract mental generals — second most important
+4. §209: Extract physical generals
+5. §6–§7: Build the complete totality
+6. §146–§154: Match the totality against the materia medica
+7. §147: The remedy with highest totality match = simillimum
+
+OUTPUT FORMAT:
+=== SYMPTOM CLASSIFICATION PER ORGANON ===
+GRADE 3 — Peculiar/Characteristic (§153):
+  [list each symptom and why it is peculiar]
+GRADE 2 — Mental Generals (§211):
+  [list mental symptoms]
+GRADE 2 — Physical Generals (§209):
+  [list general symptoms]
+GRADE 1 — Particulars:
+  [list local/particular symptoms]
+
+=== REPERTORIZATION TABLE ===
+Remedy      | Gr3(×3) | Gr2M(×2) | Gr2P(×2) | Gr1(×1) | TOTAL
+[6 remedies minimum]
+
+=== COMPARATIVE ANALYSIS (§151–§154) ===
+[Discuss top 3 remedies — why they fit or don't fit per Organon]
+
+=== SIMILLIMUM (§22, §147, §149) ===
+Selected remedy:
+Totality coverage (§6–§7):
+Peculiar symptom match (§153):
+Mental match (§211):
+Law of Similars basis (§22):
+
+=== POTENCY DECISION (§245–§248, §270–§291, 6th Ed.) ===
+Centesimal vs LM (§248, §271, §281):
+Recommended: [specific potency]
+Dose and repetition per §247–§248:
+LM plussing method (§288) if indicated:
+
+=== MIASMATIC LAYER (§78–§82, §103) ===
+Dominant miasm:
+Anti-miasmatic strategy:
+Intercurrent recommendation:
+
+=== SECOND PRESCRIPTION GUIDANCE (§252–§256) ===
+What to observe after remedy:
+When to repeat/change:`;
+
+const CASETAKING_SYSTEM = ORGANON_BASE + `
+
+YOU ARE CONDUCTING CASE TAKING BASED ON THE WHOLE ORGANON (§1–§291):
+
+COMPLETE CASE-TAKING SEQUENCE (§83–§104):
+
+OPENING — UNPREJUDICED OBSERVATION (§83–§84):
+- §83: Begin with completely open, unprejudiced mind
+- §84: Allow the patient to narrate freely without interruption
+- Never suggest symptoms (§87) — this corrupts the case
+- Write down the patient's own words (§85)
+
+PHASE 1 — DISEASE HISTORY (§85–§92):
+- §85–§86: Onset, duration, progression of the disease
+- §88: Previous treatments, suppressions (especially topical — §168–§203)
+- §89: Family history — for miasmatic identification (§78–§82)
+- §91: Distinguish drug symptoms from disease symptoms
+- §92: Any exciting cause — grief, fright, injury, suppression
+
+PHASE 2 — SYMPTOM EXPLORATION (§90–§98):
+- §90: After patient finishes, explore each symptom thoroughly
+- §96–§98: For each symptom ask:
+  * LOCATION: Where exactly?
+  * SENSATION: What kind of sensation?
+  * MODALITIES: What makes it better? Worse? Time? Weather? Position? Motion? Food?
+  * CONCOMITANTS: What accompanies it?
+  * EXTENSION: Does it radiate anywhere?
+- §95: In chronic cases — most detailed examination required
+
+PHASE 3 — MENTAL & EMOTIONAL (§93, §211–§213):
+- §93 + §211: Mental symptoms are THE MOST CHARACTERISTIC — explore deeply
+  * WILL: What does the patient desire/aversion? What do they fear most?
+  * EMOTIONS: Anxiety, grief, anger, jealousy, weeping, irritability
+  * INTELLECT: Memory, concentration, confusion, delusions
+  * DISPOSITION: Reserved vs expressive, sensitive vs indifferent
+- §212: Observe the patient's demeanor, facial expression, behavior
+
+PHASE 4 — PHYSICAL GENERALS (§94, §209):
+- §94: Thermal reaction — chilly or hot patient?
+- Thirst: quantity, temperature of drink preferred, frequency
+- Appetite: cravings, aversions, what aggravates digestion
+- Sleep: position, dreams, sleeplessness, time of waking
+- Perspiration: when, where, character, odour
+- Sexual sphere: relevant in chronic cases
+- Menstrual history in females — time, character, concomitants
+
+PHASE 5 — PECULIAR SYMPTOMS (§95–§98, §153):
+- §153 + §96–§98: Actively seek the strange, rare, uncommon symptoms
+- These are the MOST VALUABLE prescribing symptoms
+- Examples: contradictory symptoms, unusual sensations, strange modalities
+
+PHASE 6 — MIASMATIC ASSESSMENT (§78–§82, §103):
+- §78–§79: Identify primary miasm from symptoms and history
+- §80–§81: Look for sycotic (warts, growths) or syphilitic (ulcers, destructive) features
+- §82: Is psora the base? (Almost always yes in chronic cases)
+- §103: Plan anti-miasmatic treatment if needed
+
+PHASE 7 — MAINTAINING CAUSES (§7, §204–§208):
+- §204–§205: What obstacles to cure exist?
+- §259–§263: Diet, lifestyle, occupation, habits
+- §206–§208: Age, constitution, climate, relationships
+
+CASE ANALYSIS (after sufficient information — minimum 10 exchanges):
+Provide complete analysis in this format:
+
+=== COMPLETE CASE RECORD (§83–§104) ===
+=== DISEASE CLASSIFICATION (§72–§82) ===
+=== TOTALITY OF SYMPTOMS (§6–§7) ===
+=== SYMPTOM HIERARCHY (§153, §211, §209) ===
+=== MIASMATIC DIAGNOSIS (§78–§82) ===
+=== REPERTORIZATION (§146–§154) ===
+=== SIMILLIMUM (§22, §149) ===
+=== POTENCY & DOSE PLAN (§245–§248, §270–§291, 6th Ed.) ===
+=== OBSTACLES & MAINTAINING CAUSES (§204–§208) ===
+=== FOLLOW-UP PLAN (§252–§256) ===`;
+
+const MATERIA_SYSTEM = ORGANON_BASE + `
+
+YOU ARE EXPLORING MATERIA MEDICA BASED ON THE WHOLE ORGANON (§1–§291):
+
+ORGANON BASIS FOR MATERIA MEDICA:
+- §105–§120: Every remedy's power is known ONLY through provings on healthy persons
+- §106: The proving is the only true source — not speculation, not chemistry
+- §109–§111: The drug picture = all symptoms produced in provings
+- §118–§119: Each remedy has its own unique sphere; no two are identical
+- §140–§142: Clinical confirmations supplement provings
+- §143–§145: Materia medica pura = the bible of homeopathic prescribing
+
+REMEDY PRESENTATION FRAMEWORK:
+1. ESSENCE & CONSTITUTION (§83, §153):
+   The core of the remedy — what makes it unique per §153
+   Constitutional type — who needs this remedy
+
+2. VITAL FORCE AFFINITY (§9–§12, §16):
+   Which aspect of the vital force does this remedy primarily derange/restore?
+
+3. MENTAL PICTURE (§211–§213, §93):
+   Per §211 — most important; explore will, emotion, intellect completely
+
+4. PHYSICAL GENERALS (§94, §209):
+   Thermals, thirst, appetite, sleep, sweat, sexual sphere
+
+5. CHARACTERISTIC SYMPTOMS (§153):
+   Strange, rare, peculiar symptoms — the prescribing keynotes
+   These are the surest guides per §153
+
+6. MODALITIES (§96–§98):
+   All aggravations and ameliorations — time, weather, position, motion, food
+
+7. MIASMATIC BACKGROUND (§78–§82):
+   Which miasms does this remedy cover?
+   Anti-psoric? Anti-sycotic? Anti-syphilitic? Anti-tubercular?
+
+8. POTENCY GUIDELINES (§245–§248, §270–§291, 6th Ed.):
+   Per §248 — LM scale for chronic cases (6th Edition teaching)
+   Per §246–§247 — Centesimal scale indications
+   Per §278 — Individual sensitivity determines potency choice
+   Per §281–§288 — LM preparation and administration
+
+9. DRUG RELATIONSHIPS (§119):
+   Complementary, inimical, antidotal remedies
+   Follow-well remedies per clinical experience
+
+10. CLINICAL APPLICATION (§146–§154):
+    Disease states where this remedy is the simillimum
+    Differentiating from closely similar remedies (§153)
+
+Always cite specific Organon aphorisms throughout the response.`;
+
+// ── TAB NAVIGATION ──
+function go(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── API KEY ──
+function getKey() {
+  return 'AIzaSyBm1QimBWPMFyiYdAiqzePs-80W542Zer8';
+}
+
+// ── HELPERS ──
+function addTag(id, t) { var e=document.getElementById(id); e.value=e.value?e.value+', '+t:t; }
+function setR(n) { document.getElementById('mm-remedy').value=n; }
+function toggleMiasm(m) {
+  miasm = miasm===m?'':m;
+  ['psora','sycosis','syphilis','tubercular'].forEach(x => {
+    document.getElementById('m-'+x).classList.toggle('on', x===miasm);
+  });
+}
+function cleanText(t) {
+  return t.replace(/#{1,6}\s*/g,'').replace(/\*\*(.+?)\*\*/g,'$1').replace(/\*(.+?)\*/g,'$1')
+    .replace(/`(.+?)`/g,'$1').replace(/\n{3,}/g,'\n\n').trim();
+}
+function show(rid, lid, text) {
+  document.getElementById(lid).classList.remove('show');
+  document.getElementById(rid).textContent = text;
+  document.getElementById(rid).classList.add('show');
+}
+function setLoad(lid, on) {
+  document.getElementById(lid).classList.toggle('show', on);
+}
+
+// ── GEMINI CALL ──
+async function gemini(system, user) {
+  var key = getKey();
+  if (!key) throw new Error('Please enter your Gemini API key first!');
+  var prompt = system + '\n\nCRITICAL: You MUST provide the COMPLETE analysis. Do NOT stop midway. Do NOT truncate. Write the FULL response until the very end including all sections.\nIMPORTANT: Use plain text only. No markdown. No ###, **, ==. Use CAPS for section headers.\n\n' + user;
+  var res = await fetch(GEMINI_URL + '?key=' + key, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      contents: [{parts:[{text:prompt}]}],
+      generationConfig: {maxOutputTokens:65536, temperature:0.3}
+    })
+  });
+  if (!res.ok) { var e=await res.json().catch(()=>({})); throw new Error(e?.error?.message||'HTTP '+res.status); }
+  var d = await res.json();
+  var text = cleanText(d.candidates?.[0]?.content?.parts?.[0]?.text||'No response.');
+  var reason = d.candidates?.[0]?.finishReason;
+  if (reason && reason !== 'STOP') text += '\n\n[Note: Response ended due to: ' + reason + '. Please try again for full analysis.]';
+  return text;
+}
+
+async function geminiChat(msgs) {
+  var key = getKey();
+  if (!key) throw new Error('Please enter your Gemini API key first!');
+  var contents = [
+    {role:'user', parts:[{text: CASETAKING_SYSTEM + '\n\nIMPORTANT: Plain text only. No markdown.'}]},
+    {role:'model', parts:[{text:'Understood. I will conduct case taking per Organon 6th Edition.'}]}
+  ];
+  msgs.forEach(m => contents.push({role: m.role==='user'?'user':'model', parts:[{text:m.content}]}));
+  var res = await fetch(GEMINI_URL + '?key=' + key, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({contents, generationConfig:{maxOutputTokens:8192,temperature:0.4}})
+  });
+  if (!res.ok) { var e=await res.json().catch(()=>({})); throw new Error(e?.error?.message||'HTTP '+res.status); }
+  var d = await res.json();
+  return cleanText(d.candidates?.[0]?.content?.parts?.[0]?.text||'No response.');
+}
+
+// ══════════════════════════════════════════
+// EMAIL OTP SECURITY
+// ══════════════════════════════════════════
+// ── EmailJS Configuration ──
+// SETUP: Replace these 3 values with your EmailJS credentials
+// 1. Go to https://emailjs.com → free account
+// 2. Create an Email Service (Gmail/Outlook etc.) → copy Service ID
+// 3. Create an Email Template with variables: {{otp_code}}, {{to_email}}
+// 4. Copy your Public Key from Account → API Keys
+const EMAILJS_SERVICE_ID  = 'service_99ty2b8';
+const EMAILJS_TEMPLATE_ID = 'template_543z1yo';
+const EMAILJS_PUBLIC_KEY  = 'SJpcQzK9g7CN-hEAW';
+
+// ── Clinic owner email — OTP always delivered here ──
+const CLINIC_EMAIL = 'lifecareclinic44@gmail.com';
+// Add the email addresses that are permitted to access this app.
+// Leave empty [] to allow ANY email address.
+const ALLOWED_EMAILS = [
+  // 'doctor@example.com',
+  // 'admin@lifecareclinic.com',
+];
+
+let _otpCode = '';
+let _otpEmail = '';
+let _otpExpiry = 0;
+let _otpTimer = null;
+let _otpAttempts = 0;
+
+function otpGenCode() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+async function otpSendCode() {
+  var emailEl = document.getElementById('otp-email');
+  var email = emailEl.value.trim().toLowerCase();
+  var msg1 = document.getElementById('otp-msg1');
+
+  // Basic validation
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg1.className = 'otp-msg err';
+    msg1.textContent = '⚠ Please enter a valid email address.';
+    return;
+  }
+
+  // Whitelist check (if list is non-empty)
+  if (ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(email)) {
+    msg1.className = 'otp-msg err';
+    msg1.textContent = '⛔ This email is not authorised to access this app.';
+    return;
+  }
+
+  var btn = document.getElementById('otp-send-btn');
+  btn.disabled = true;
+  msg1.className = 'otp-msg ok';
+  msg1.textContent = '📤 Sending OTP...';
+
+  _otpCode   = otpGenCode();
+  _otpEmail  = email;
+  _otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
+  _otpAttempts = 0;
+
+  // Check if EmailJS is configured
+  if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID') {
+    // DEMO MODE — show OTP in alert (remove this block once EmailJS is configured)
+    msg1.className = 'otp-msg ok';
+    msg1.textContent = '✅ [DEMO] OTP sent to clinic email!';
+    alert('🔑 DEMO MODE — Your OTP is: ' + _otpCode + '\n\nIn live mode this will be sent to: ' + CLINIC_EMAIL);
+    recordLogin(email, 'OTP Sent');
+    otpShowStep2();
+    btn.disabled = false;
+    return;
+  }
+
+  // Real EmailJS send
+  try {
+    // Wait for EmailJS to load if not ready
+    if (typeof emailjs === 'undefined') {
+      await new Promise((res, rej) => {
+        var t = 0;
+        var iv = setInterval(() => {
+          t += 200;
+          if (typeof emailjs !== 'undefined') { clearInterval(iv); res(); }
+          if (t > 5000) { clearInterval(iv); rej(new Error('EmailJS SDK failed to load. Check internet connection.')); }
+        }, 200);
+      });
+    }
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+    var result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      email: CLINIC_EMAIL,
+      passcode: _otpCode,
+      to_name: 'Dr. J C Patel',
+      message: 'Login attempt from: ' + email,
+    });
+    if (result.status === 200) {
+      msg1.className = 'otp-msg ok';
+      msg1.textContent = '✅ OTP sent to clinic email!';
+      recordLogin(email, 'OTP Sent');
+      otpShowStep2();
+    } else {
+      throw new Error('Status ' + result.status + ': ' + result.text);
+    }
+  } catch(err) {
+    var errMsg = err.text || err.message || JSON.stringify(err);
+    msg1.className = 'otp-msg err';
+    msg1.textContent = '❌ ' + errMsg;
+    console.error('EmailJS error:', err);
+  }
+  btn.disabled = false;
+}
+
+function otpShowStep2() {
+  document.getElementById('otp-step1').style.display = 'none';
+  document.getElementById('otp-step2').style.display = 'block';
+  document.getElementById('otp-email-display').textContent = _otpEmail;
+  // Clear digits
+  document.querySelectorAll('#otp-boxes input').forEach(i => i.value = '');
+  document.getElementById('otp-msg2').textContent = '';
+  document.getElementById('otp-resend').style.display = 'none';
+  document.querySelectorAll('#otp-boxes input')[0].focus();
+  otpStartTimer();
+}
+
+function otpStartTimer() {
+  if (_otpTimer) clearInterval(_otpTimer);
+  var timerEl = document.getElementById('otp-timer');
+  var resendEl = document.getElementById('otp-resend');
+  _otpTimer = setInterval(function() {
+    var rem = Math.max(0, _otpExpiry - Date.now());
+    var m = String(Math.floor(rem / 60000)).padStart(2,'0');
+    var s = String(Math.floor((rem % 60000) / 1000)).padStart(2,'0');
+    timerEl.textContent = rem > 0 ? '⏱ OTP expires in ' + m + ':' + s : '⌛ OTP expired.';
+    if (rem === 0) {
+      clearInterval(_otpTimer);
+      resendEl.style.display = 'block';
+    }
+  }, 1000);
+}
+
+function otpDigit(el, idx) {
+  el.value = el.value.replace(/[^0-9]/g,'').slice(-1);
+  if (el.value && idx < 5) {
+    document.querySelectorAll('#otp-boxes input')[idx + 1].focus();
+  }
+  // Auto-verify when all filled
+  var vals = Array.from(document.querySelectorAll('#otp-boxes input')).map(i=>i.value);
+  if (vals.every(v=>v.length===1)) otpVerify();
+}
+
+function otpBack(e, idx) {
+  if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+    document.querySelectorAll('#otp-boxes input')[idx - 1].focus();
+  }
+}
+
+function otpVerify() {
+  var entered = Array.from(document.querySelectorAll('#otp-boxes input')).map(i=>i.value).join('');
+  var msg2 = document.getElementById('otp-msg2');
+
+  if (entered.length < 6) {
+    msg2.className = 'otp-msg err';
+    msg2.textContent = '⚠ Please enter all 6 digits.';
+    return;
+  }
+
+  if (Date.now() > _otpExpiry) {
+    msg2.className = 'otp-msg err';
+    msg2.textContent = '⌛ OTP has expired. Please request a new one.';
+    document.getElementById('otp-resend').style.display = 'block';
+    return;
+  }
+
+  _otpAttempts++;
+  if (_otpAttempts > 5) {
+    msg2.className = 'otp-msg err';
+    msg2.textContent = '🚫 Too many attempts. Please reload the page.';
+    document.getElementById('otp-verify-btn').disabled = true;
+    return;
+  }
+
+  if (entered === _otpCode) {
+    clearInterval(_otpTimer);
+    msg2.className = 'otp-msg ok';
+    msg2.textContent = '✅ Verified! Loading app...';
+    recordLogin(_otpEmail, 'Verified ✅');
+    setTimeout(function() {
+      document.getElementById('otp-overlay').classList.add('hidden');
+      _otpCode = ''; // Clear code from memory
+      resetLogoutTimer(); // Start 2-hour inactivity timer
+    }, 700);
+  } else {
+    msg2.className = 'otp-msg err';
+    msg2.textContent = '❌ Incorrect OTP. ' + (5 - _otpAttempts) + ' attempt(s) remaining.';
+    document.querySelectorAll('#otp-boxes input').forEach(i => i.value = '');
+    document.querySelectorAll('#otp-boxes input')[0].focus();
+  }
+}
+
+function otpResend() {
+  document.getElementById('otp-step2').style.display = 'none';
+  document.getElementById('otp-step1').style.display = 'block';
+  document.getElementById('otp-msg1').textContent = '';
+  document.getElementById('otp-email').value = _otpEmail;
+}
+
+function otpBack2Step1() {
+  clearInterval(_otpTimer);
+  document.getElementById('otp-step2').style.display = 'none';
+  document.getElementById('otp-step1').style.display = 'block';
+  document.getElementById('otp-msg1').textContent = '';
+}
+
+// Load EmailJS SDK dynamically
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  s.async = true;
+  s.onload = function() { emailjs.init(EMAILJS_PUBLIC_KEY); };
+  document.head.appendChild(s);
+})();
+
+// ══════════════════════════════════════════
+
+// ── REMEDY FINDER ──
+async function findRemedy() {
+  var c = document.getElementById('s-complaint').value.trim();
+  if (!c) { alert('Please enter chief complaint.'); return; }
+  var btn = document.getElementById('btn-remedy');
+  btn.disabled=true; setLoad('l-remedy',true);
+  document.getElementById('r-remedy').classList.remove('show');
+  try {
+    var msg = 'Chief Complaint: '+c+'\nMental/Emotional (§211): '+(document.getElementById('s-mental').value||'Not provided')+'\nPhysical Generals: '+(document.getElementById('s-generals').value||'Not provided')+'\nModalities: '+(document.getElementById('s-modalities').value||'Not provided')+'\nMiasm (§78): '+(miasm||'Not specified')+'\n\nApply complete Organon 6th Edition. Find the simillimum.';
+    var r = await gemini(REMEDY_SYSTEM, msg);
+    show('r-remedy','l-remedy',r);
+  } catch(e) { show('r-remedy','l-remedy','Error: '+e.message); }
+  btn.disabled=false; setLoad('l-remedy',false);
+}
+
+// ── REPERTORIZATION ──
+async function repertorize() {
+  var m=document.getElementById('r-mental').value.trim(), p=document.getElementById('r-physical').value.trim(), pe=document.getElementById('r-peculiar').value.trim();
+  if (!m&&!p&&!pe) { alert('Please enter at least one symptom group.'); return; }
+  var btn=document.getElementById('btn-rep');
+  btn.disabled=true; setLoad('l-rep',true);
+  document.getElementById('r-rep').classList.remove('show');
+  try {
+    var msg = 'Mental Generals (§211): '+(m||'Not provided')+'\nPhysical Generals (§209): '+(p||'Not provided')+'\nPeculiar Symptoms (§153): '+(pe||'Not provided')+'\nCommon Particulars: '+(document.getElementById('r-common').value||'Not provided')+'\nMiasmatic Background: '+(document.getElementById('r-miasm').value||'Not specified');
+    var r = await gemini(REPERTORY_SYSTEM, msg);
+    show('r-rep','l-rep',r);
+  } catch(e) { show('r-rep','l-rep','Error: '+e.message); }
+  btn.disabled=false; setLoad('l-rep',false);
+}
+
+// ── LOGIN ACTIVITY LOG ──
+var loginLog = JSON.parse(localStorage.getItem('lc_loginlog') || '[]');
+
+function recordLogin(email, status) {
+  var now = new Date();
+  var entry = {
+    email: email,
+    date: now.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}),
+    time: now.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'}),
+    status: status, // 'OTP Sent' or 'Verified'
+    device: navigator.userAgent.includes('Mobile') ? '📱 Mobile' : '💻 Desktop',
+    browser: (function(){
+      var ua = navigator.userAgent;
+      if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
+      if (ua.includes('Firefox')) return 'Firefox';
+      if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+      if (ua.includes('Edg')) return 'Edge';
+      return 'Unknown';
+    })(),
+    os: (function(){
+      var ua = navigator.userAgent;
+      if (ua.includes('Windows')) return 'Windows';
+      if (ua.includes('Android')) return 'Android';
+      if (ua.includes('iPhone') || ua.includes('iPad')) return 'iOS';
+      if (ua.includes('Mac')) return 'Mac';
+      if (ua.includes('Linux')) return 'Linux';
+      return 'Unknown';
+    })()
+  };
+  loginLog.unshift(entry);
+  if (loginLog.length > 50) loginLog = loginLog.slice(0, 50); // keep last 50
+  localStorage.setItem('lc_loginlog', JSON.stringify(loginLog));
+  renderLoginLog();
+}
+
+function renderLoginLog() {
+  var el = document.getElementById('login-log-list');
+  if (!el) return;
+  if (!loginLog.length) {
+    el.innerHTML = '<p style="color:#52796f;font-size:13px;text-align:center;padding:16px 0;">No logins recorded yet.</p>';
+    return;
+  }
+  el.innerHTML = loginLog.map(function(e, i) {
+    var statusColor = e.status === 'Verified ✅' ? '#2e6b42' : '#c9a84c';
+    var statusBg = e.status === 'Verified ✅' ? '#d8f3dc' : '#fdf3d0';
+    return '<div style="background:#f8f4ed;border-radius:10px;padding:11px 12px;margin-bottom:8px;border:1px solid #b5c4b1;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;">' +
+        '<span style="font-size:13px;font-weight:bold;color:#1e3a2f;">' + e.email + '</span>' +
+        '<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:' + statusBg + ';color:' + statusColor + ';font-weight:bold;">' + e.status + '</span>' +
+      '</div>' +
+      '<div style="font-size:11px;color:#52796f;display:flex;gap:10px;flex-wrap:wrap;">' +
+        '<span>📅 ' + e.date + '</span>' +
+        '<span>🕐 ' + e.time + '</span>' +
+        '<span>' + e.device + '</span>' +
+        '<span>🌐 ' + e.browser + '</span>' +
+        '<span>💾 ' + e.os + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function clearLoginLog() {
+  if (!confirm('Clear all login records?')) return;
+  loginLog = [];
+  localStorage.setItem('lc_loginlog', JSON.stringify(loginLog));
+  renderLoginLog();
+}
+
+// Render on page load
+document.addEventListener('DOMContentLoaded', renderLoginLog);
+
+// ── AUTO-LOGOUT (2 hours inactivity) ──
+var _logoutTimer;
+var _logoutDuration = 2 * 60 * 60 * 1000; // 2 hours
+
+function resetLogoutTimer() {
+  clearTimeout(_logoutTimer);
+  _logoutTimer = setTimeout(function() {
+    alert('⏱ Session expired after 2 hours of inactivity.\nPlease verify your OTP again.');
+    document.getElementById('otp-overlay').classList.remove('hidden');
+    document.getElementById('otp-step1').style.display = 'block';
+    document.getElementById('otp-step2').style.display = 'none';
+    document.getElementById('otp-msg1').textContent = '';
+    document.getElementById('otp-email').value = '';
+    _otpCode = ''; _otpEmail = '';
+  }, _logoutDuration);
+}
+
+['click','keydown','touchstart','scroll'].forEach(function(evt) {
+  document.addEventListener(evt, function() {
+    if (!document.getElementById('otp-overlay').classList.contains('hidden')) return;
+    resetLogoutTimer();
+  }, true);
+});
+
+// ── CASE PROFORMA ──
+let savedCases = JSON.parse(localStorage.getItem('lc_cases') || '[]');
+let pfThermalVal = '';
+
+function switchCaseTab(t) {
+  ['form','chat','saved'].forEach(x => {
+    document.getElementById('cpanel-'+x).style.display = x===t ? 'block' : 'none';
+    var btn = document.getElementById('ctab-'+x);
+    btn.style.background = x===t ? '#1e3a2f' : '#f2ead8';
+    btn.style.color = x===t ? '#c9a84c' : '#52796f';
+  });
+  if (t==='saved') renderSaved();
+}
+
+function pfTag(id, val) {
+  var el = document.getElementById(id);
+  var cur = el.value.trim();
+  el.value = cur ? cur + ', ' + val : val;
+}
+
+function pfToggleTag(btn, id, val) {
+  var el = document.getElementById(id);
+  var cur = el.value ? el.value.split(', ').filter(v=>v) : [];
+  var idx = cur.indexOf(val);
+  if (idx === -1) {
+    cur.push(val);
+    btn.style.background = '#1e3a2f';
+    btn.style.color = '#c9a84c';
+    btn.style.borderColor = '#1e3a2f';
+  } else {
+    cur.splice(idx, 1);
+    btn.style.background = '#f2ead8';
+    btn.style.color = '#1e3a2f';
+    btn.style.borderColor = '#b5c4b1';
+  }
+  el.value = cur.join(', ');
+}
+
+function pfThermal(v) {
+  pfThermalVal = v;
+  ['hot','chilly','ambi'].forEach(x => {
+    var b = document.getElementById('pf-t-'+x);
+    b.style.fontWeight = x===v ? 'bold' : 'normal';
+    b.style.background = x===v ? '#1e3a2f' : '#fff';
+    b.style.color = x===v ? '#fff' : (x==='hot'?'#6b1e1e':x==='chilly'?'#1e4f6b':'#2e6b42');
+  });
+}
+
+function pfCollect() {
+  return {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('en-IN'),
+    name: document.getElementById('pf-name').value,
+    age: document.getElementById('pf-age').value,
+    gender: document.getElementById('pf-gender').value,
+    complaint: document.getElementById('pf-complaint').value,
+    duration: document.getElementById('pf-duration').value,
+    built: document.getElementById('pf-built').value,
+    appetite: document.getElementById('pf-appetite').value,
+    thirst: document.getElementById('pf-thirst').value,
+    urine: document.getElementById('pf-urine').value,
+    stool: document.getElementById('pf-stool').value,
+    sleep: document.getElementById('pf-sleep').value,
+    perspiration: document.getElementById('pf-perspiration').value,
+    addictions: document.getElementById('pf-addictions').value,
+    desires: document.getElementById('pf-desires').value,
+    aversions: document.getElementById('pf-aversions').value,
+    thermal: pfThermalVal,
+    allergy: document.getElementById('pf-allergy').value,
+    mental: document.getElementById('pf-mental').value,
+    better: document.getElementById('pf-better').value,
+    worse: document.getElementById('pf-worse').value,
+    menstrual: document.getElementById('pf-menstrual').value,
+    lmp: document.getElementById('pf-lmp').value,
+    leucorrhoea: document.getElementById('pf-leucorrhoea').value,
+    obstetric: document.getElementById('pf-obstetric').value,
+    motherPreg: document.getElementById('pf-mother-preg').value,
+    birth: document.getElementById('pf-birth').value,
+    milestones: document.getElementById('pf-milestones').value,
+    immunizations: document.getElementById('pf-immunizations').value,
+    childhoodDis: document.getElementById('pf-childhood-dis').value,
+    past: document.getElementById('pf-past').value,
+    family: document.getElementById('pf-family').value,
+    weight: document.getElementById('pf-weight').value,
+    height: document.getElementById('pf-height').value,
+    face: document.getElementById('pf-face').value,
+    eyes: document.getElementById('pf-eyes').value,
+    tongue: document.getElementById('pf-tongue').value,
+    lips: document.getElementById('pf-lips').value,
+    skin: document.getElementById('pf-skin').value,
+    nails: document.getElementById('pf-nails').value,
+    temp: document.getElementById('pf-temp').value,
+    pulse: document.getElementById('pf-pulse').value,
+    bp: document.getElementById('pf-bp').value,
+    rr: document.getElementById('pf-rr').value,
+    spo2: document.getElementById('pf-spo2').value,
+    pain: document.getElementById('pf-pain').value,
+    examination: document.getElementById('pf-examination').value,
+    provDiag: document.getElementById('pf-prov-diag').value,
+    diffDiag: document.getElementById('pf-diff-diag').value,
+    investigations: document.getElementById('pf-investigations').value,
+    diagnosis: document.getElementById('pf-diagnosis').value,
+  };
+}
+
+function pfSave() {
+  var d = pfCollect();
+  if (!d.name && !d.complaint) { alert('Please enter at least patient name or chief complaint.'); return; }
+  savedCases.unshift(d);
+  localStorage.setItem('lc_cases', JSON.stringify(savedCases));
+  alert('✅ Case saved for ' + (d.name || 'Patient') + ' on ' + d.date);
+}
+
+function pfClear() {
+  if (!confirm('Clear all fields?')) return;
+  document.querySelectorAll('#cpanel-form input[type=text], #cpanel-form textarea, #cpanel-form select').forEach(el => el.value = '');
+  document.getElementById('pf-pain').value = 0;
+  document.getElementById('pf-pain-val').textContent = '0';
+  pfThermalVal = '';
+  ['hot','chilly','ambi'].forEach(x => {
+    var b = document.getElementById('pf-t-'+x);
+    b.style.background='#fff'; b.style.fontWeight='normal';
+    b.style.color = x==='hot'?'#6b1e1e':x==='chilly'?'#1e4f6b':'#2e6b42';
+  });
+  // Reset all toggle tag buttons
+  document.querySelectorAll('#cpanel-form .tags button').forEach(b => {
+    b.style.background='#f2ead8'; b.style.color='#1e3a2f'; b.style.borderColor='#b5c4b1';
+  });
+  document.getElementById('r-pf').classList.remove('show');
+}
+
+function pfToText(d) {
+  return `PATIENT: ${d.name||'—'} | Age: ${d.age||'—'} | Gender: ${d.gender||'—'} | Date: ${d.date}
+CHIEF COMPLAINT: ${d.complaint||'—'} | Duration: ${d.duration||'—'}
+
+PHYSICAL GENERALS (§209):
+Built: ${d.built||'—'} | Appetite: ${d.appetite||'—'} | Thirst: ${d.thirst||'—'} | Urine: ${d.urine||'—'}
+Stool: ${d.stool||'—'} | Sleep: ${d.sleep||'—'} | Perspiration: ${d.perspiration||'—'} | Addictions: ${d.addictions||'—'}
+Desires: ${d.desires||'—'} | Aversions: ${d.aversions||'—'} | Thermal: ${d.thermal||'—'} | Allergy: ${d.allergy||'—'}
+
+MENTAL & EMOTIONAL (§211 — Most Important): ${d.mental||'—'}
+
+MODALITIES (§133): Better: ${d.better||'—'} | Worse: ${d.worse||'—'}
+
+FEMALE HISTORY: Menstrual: ${d.menstrual||'—'} | LMP: ${d.lmp||'—'} | Leucorrhoea: ${d.leucorrhoea||'—'}
+Obstetric: ${d.obstetric||'—'} | Mother pregnancy: ${d.motherPreg||'—'}
+
+CHILDHOOD HISTORY: Birth: ${d.birth||'—'} | Milestones: ${d.milestones||'—'} | Immunizations: ${d.immunizations||'—'} | Childhood diseases: ${d.childhoodDis||'—'}
+
+PAST HISTORY: ${d.past||'—'}
+FAMILY HISTORY: ${d.family||'—'}
+
+PHYSICAL CHARACTERISTICS: Weight: ${d.weight||'—'} | Height: ${d.height||'—'} | Face: ${d.face||'—'} | Eyes: ${d.eyes||'—'} | Tongue: ${d.tongue||'—'} | Lips: ${d.lips||'—'} | Skin: ${d.skin||'—'} | Nails: ${d.nails||'—'}
+
+VITAL DATA: Temp: ${d.temp||'—'} | Pulse: ${d.pulse||'—'} | BP: ${d.bp||'—'} | RR: ${d.rr||'—'} | SpO2: ${d.spo2||'—'} | Pain (NPRS): ${d.pain}/10
+
+EXAMINATION: ${d.examination||'—'}
+PROVISIONAL DIAGNOSIS: ${d.provDiag||'—'} | DIFFERENTIAL: ${d.diffDiag||'—'}
+INVESTIGATIONS: ${d.investigations||'—'} | DIAGNOSIS: ${d.diagnosis||'—'}`;
+}
+
+async function pfGetRemedy() {
+  var d = pfCollect();
+  if (!d.complaint && !d.mental) { alert('Please enter at least chief complaint or mental symptoms.'); return; }
+  pfSave();
+  var btn = document.querySelector('#cpanel-form .btn:last-of-type');
+  setLoad('l-pf', true);
+  document.getElementById('r-pf').classList.remove('show');
+  try {
+    var r = await gemini(REMEDY_SYSTEM, pfToText(d) + '\n\nBased on this complete case proforma per Organon 6th Edition §83–104, provide the COMPLETE analysis with ALL of the following sections — do not skip or shorten any section:\n1. DISEASE ANALYSIS (miasm, vital force)\n2. SYMPTOM HIERARCHY (§153 peculiar, §211 mental generals, §209 physical generals, particulars)\n3. REPERTORIZATION (rubrics with grades from Kent/Synthesis)\n4. TOP 3 REMEDIES (with scores)\n5. SIMILLIMUM SELECTION (with full justification)\n6. MATERIA MEDICA CONFIRMATION (Boericke, Kent, Clarke, Allen)\n7. POTENCY & DOSE (§246–248, LM scale §281–288)\n8. CASE MANAGEMENT & FOLLOW UP\nWrite every section completely.');
+    show('r-pf', 'l-pf', r);
+  } catch(e) { show('r-pf', 'l-pf', 'Error: ' + e.message); }
+}
+
+function renderSaved() {
+  var el = document.getElementById('saved-list');
+  if (!savedCases.length) { el.innerHTML = '<p style="color:#52796f;font-size:13px;text-align:center;padding:20px 0;">No saved cases yet.</p>'; return; }
+  el.innerHTML = savedCases.map((d,i) => `
+    <div style="background:#f8f4ed;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #b5c4b1;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <strong style="color:#1e3a2f;font-size:14px;">${d.name||'Unknown Patient'}</strong>
+        <span style="font-size:10px;color:#52796f;">${d.date}</span>
+      </div>
+      <div style="font-size:12px;color:#52796f;margin-bottom:8px;">Age: ${d.age||'—'} | ${d.gender||'—'} | ${d.complaint||'No complaint noted'}</div>
+      <div style="display:flex;gap:6px;">
+        <button onclick="pfLoad(${i})" style="flex:1;padding:6px;background:#1e3a2f;color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;">📂 Load</button>
+        <button onclick="pfDelete(${i})" style="padding:6px 10px;background:#fff;color:#b93232;border:1px solid #b93232;border-radius:6px;font-size:11px;cursor:pointer;">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function pfLoad(i) {
+  var d = savedCases[i];
+  var fields = ['name','age','complaint','duration','built','appetite','thirst','urine','stool','sleep','perspiration','addictions','desires','aversions','allergy','mental','better','worse','menstrual','lmp','leucorrhoea','obstetric','past','family','weight','height','face','eyes','tongue','lips','skin','nails','temp','pulse','bp','rr','spo2','examination','investigations','diagnosis'];
+  fields.forEach(f => { var el = document.getElementById('pf-'+f); if(el && d[f]) el.value = d[f]; });
+  var gEl = document.getElementById('pf-gender'); if(gEl && d.gender) gEl.value = d.gender;
+  var mpEl = document.getElementById('pf-mother-preg'); if(mpEl) mpEl.value = d.motherPreg||'';
+  var bdEl = document.getElementById('pf-birth'); if(bdEl) bdEl.value = d.birth||'';
+  var mlEl = document.getElementById('pf-milestones'); if(mlEl) mlEl.value = d.milestones||'';
+  var imEl = document.getElementById('pf-immunizations'); if(imEl) imEl.value = d.immunizations||'';
+  var cdEl = document.getElementById('pf-childhood-dis'); if(cdEl) cdEl.value = d.childhoodDis||'';
+  var pdEl = document.getElementById('pf-prov-diag'); if(pdEl) pdEl.value = d.provDiag||'';
+  var ddEl = document.getElementById('pf-diff-diag'); if(ddEl) ddEl.value = d.diffDiag||'';
+  var painEl = document.getElementById('pf-pain'); if(painEl) { painEl.value = d.pain||0; document.getElementById('pf-pain-val').textContent = d.pain||0; }
+  if(d.thermal) pfThermal(d.thermal);
+  switchCaseTab('form');
+}
+
+function pfDelete(i) {
+  if(!confirm('Delete this case?')) return;
+  savedCases.splice(i,1);
+  localStorage.setItem('lc_cases', JSON.stringify(savedCases));
+  renderSaved();
+}
+
+// ── CHAT ──
+async function sendChat() {
+  var inp=document.getElementById('chat-in'), t=inp.value.trim();
+  if (!t) return;
+  addMsg('user',t); chatHistory.push({role:'user',content:t}); inp.value='';
+  setLoad('l-chat',true);
+  try {
+    var r=await geminiChat(chatHistory);
+    chatHistory.push({role:'assistant',content:r}); addMsg('bot',r);
+  } catch(e) { addMsg('bot','Error: '+e.message); }
+  setLoad('l-chat',false);
+}
+function addMsg(role,text) {
+  var box=document.getElementById('chatbox'), d=document.createElement('div');
+  d.className='msg '+role; d.textContent=text; box.appendChild(d);
+  box.scrollTop=box.scrollHeight;
+}
+function clearChat() {
+  chatHistory=[];
+  document.getElementById('chatbox').innerHTML='<div class="msg bot">Namaste Doctor. New case started per §83 of Organon.\n\nWhat is the patient\'s chief complaint?</div>';
+}
+
+// ── MATERIA MEDICA ──
+async function exploreMateria() {
+  var rem=document.getElementById('mm-remedy').value.trim();
+  if (!rem) { alert('Please enter a remedy name.'); return; }
+  var aspect=document.getElementById('mm-aspect').value;
+  var btn=document.getElementById('btn-mm');
+  btn.disabled=true; setLoad('l-mm',true);
+  document.getElementById('r-mm').classList.remove('show');
+  var map = {
+    essence:'Complete drug picture: Kent (essence), Boericke (keynotes), Clarke (clinical), Allen (provings). Organon §6, §153.',
+    mental:'Mental picture per §211 from Kent MM + Boericke + Clarke + Allen. Will, emotion, intellect.',
+    generals:'Physical generals from all four MMs per §94 and §209.',
+    keynotes:'Keynotes per §153 from all four sources. Note symptoms confirmed across multiple MMs.',
+    modalities:'Complete modalities from Boericke, Kent, Clarke, Allen per §96-98.',
+    miasm:'Miasmatic background per §78-82 from Kent + Clarke + Boericke + Allen.',
+    compare:'Compare 4 related remedies using all four MMs per §153.',
+    potency:'Potency per §246-248, LM scale §281-288, 6th Ed. Boericke + Kent guidelines.',
+    clinical:'Clinical indications from Boericke + Clarke + Kent + Allen per §146-154.'
+  };
+  try {
+    var r=await gemini(MATERIA_SYSTEM,'Remedy: '+rem+'\nRequired: '+map[aspect]+'\n\nCite Organon aphorisms throughout.');
+    show('r-mm','l-mm',r);
+  } catch(e) { show('r-mm','l-mm','Error: '+e.message); }
+  btn.disabled=false; setLoad('l-mm',false);
+}
+
+// ── CLINIC ──
+function bookWhatsApp() {
+  var name=document.getElementById('apt-name').value.trim();
+  if (!name) { alert('Please enter patient name.'); return; }
+  var age=document.getElementById('apt-age').value.trim();
+  var date=document.getElementById('apt-date').value.trim();
+  var complaint=document.getElementById('apt-complaint').value.trim();
+  var msg=encodeURIComponent('🌿 *Appointment — LifeCare Clinic*\n\n👤 Patient: '+name+'\n🧑 Age/Gender: '+(age||'—')+'\n📅 Time: '+(date||'—')+'\n🩺 Complaint: '+(complaint||'—')+'\n\nSent via LifeCare Clinic App');
+  window.open('https://wa.me/917203004050?text='+msg,'_blank');
+}
+function callClinic() { window.location.href='tel:+917203004050'; }
+</script>
+</body>
+</html>
