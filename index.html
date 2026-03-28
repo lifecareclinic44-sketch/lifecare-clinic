@@ -200,6 +200,15 @@ textarea:focus, input[type=text]:focus, select:focus { border-color: #52796f; ba
   <a onclick="go('clinic',this)">🏥<br>CLINIC</a>
 </div>
 
+<!-- API KEY BAR -->
+<div class="apibar" id="apibar">
+  <label>🔑 Gemini Key</label>
+  <input type="password" id="apikey-input" placeholder="Paste your Gemini API key..." autocomplete="off">
+  <button onclick="saveKey()" style="padding:5px 10px;background:#1e3a2f;color:#c9a84c;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer;white-space:nowrap;">Save</button>
+  <button onclick="clearKey()" style="padding:5px 8px;background:#f2ead8;color:#52796f;border:1px solid #b5c4b1;border-radius:6px;font-size:11px;cursor:pointer;">✕</button>
+  <span id="apikey-status" style="font-size:11px;color:#2e6b42;white-space:nowrap;"></span>
+</div>
+
 <!-- REMEDY -->
 <div id="remedy" class="panel active">
   <div class="quote">
@@ -1188,9 +1197,21 @@ function go(id, el) {
 
 // ── API KEY ──
 function getKey() {
-  return 'AIzaSyBm1QimBWPMFyiYdAiqzePs-80W542Zer8';
+  return localStorage.getItem('lc_gemini_key') || '';
 }
-
+function saveKey() {
+  var k = document.getElementById('apikey-input').value.trim();
+  if (!k) { alert('Please enter your Gemini API key.'); return; }
+  localStorage.setItem('lc_gemini_key', k);
+  document.getElementById('apikey-input').value = '';
+  document.getElementById('apikey-status').textContent = '✅ Key saved!';
+  setTimeout(function(){ document.getElementById('apikey-status').textContent = ''; }, 2000);
+}
+function clearKey() {
+  localStorage.removeItem('lc_gemini_key');
+  document.getElementById('apikey-status').textContent = '🗑 Key cleared.';
+  setTimeout(function(){ document.getElementById('apikey-status').textContent = ''; }, 2000);
+}
 // ── HELPERS ──
 function addTag(id, t) { var e=document.getElementById(id); e.value=e.value?e.value+', '+t:t; }
 function setR(n) { document.getElementById('mm-remedy').value=n; }
